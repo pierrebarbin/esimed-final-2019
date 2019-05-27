@@ -23,7 +23,12 @@ module.exports = class UserDAO extends DAO {
                 }else{
                     // get the last insert id
                     console.log(`A row has been inserted with rowid ${this.lastID} in table ${this.table}`);
-                    resolve();
+                    resolve( new user(
+                        this.lastID,
+                        userObj.email,
+                        userObj.password,
+                        userObj.pseudo
+                    ));
                 }
             });
         });

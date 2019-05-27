@@ -1,5 +1,5 @@
 const sql = require('sqlite3');
-const productSeeder = require(`${appRoot}/seeder/productSeeder.js`);
+const userSeeder = require(`${appRoot}/database/seeder/userSeeder.js`);
 
 module.exports = class Database {
     constructor() {}
@@ -20,7 +20,7 @@ module.exports = class Database {
                         pseudo text NOT NULL
                     )`);
 
-                    db.run(`CREATE TABLE IF NOT EXISTS chanllenges(
+                    db.run(`CREATE TABLE IF NOT EXISTS challenges(
                         id integer PRIMARY KEY AUTOINCREMENT,
                         content text NOT NULL,
                         is_realized integer DEFAULT 0,
@@ -32,7 +32,10 @@ module.exports = class Database {
 
                     db.run(`CREATE TABLE IF NOT EXISTS likes(
                         user_id integer,
-                        next_id integer
+                        challenge_id integer,
+                        PRIMARY KEY (user_id,challenge_id),
+                        FOREIGN KEY (user_id) REFERENCES users (id),
+                        FOREIGN KEY (challenge_id) REFERENCES challenges (id)
                     )`);
 
                     db.run(`CREATE TABLE IF NOT EXISTS comments(
@@ -45,12 +48,13 @@ module.exports = class Database {
                         user_id integer NOT NULL,
                         challenge_id integer NOT NULL,
                         created_at integer NOT NULL,
-                        FOREIGN KEY (status_id) REFERENCES status (id)
+                        FOREIGN KEY (user_id) REFERENCES users (id),
+                        FOREIGN KEY (challenge_id) REFERENCES challenges (id)
                     )`);
 
                     if(seeder){
-                        providerSeeder.seed((provider,data) => {
-                            productSeeder.seed(provider._id,data,db);
+                        userSeeder.seed((user) => {
+
                         },db);
 
                     }

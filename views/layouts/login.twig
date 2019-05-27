@@ -3,5 +3,15 @@
 {% block title %}s'authentifier{% endblock %}
 
 {% block body %}
-    Login
+    <div id="formContent">
+
+            <h2>Connexion</h2>
+            <!-- Login Form -->
+            <form action="/login" method="post">
+                <input type="text" id="login" class="fadeIn second" name="username" placeholder="Identifiant...">
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Mot de passe...">
+                <input type="submit" class="fadeIn fourth" value="Se connecter">
+            </form>
+
+        </div>
 {% endblock %}

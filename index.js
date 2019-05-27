@@ -17,7 +17,7 @@ const setting = require('./setting');
  */
 app.use('/static', express.static(__dirname + '/public'));
 app.use(session({
-    secret: "esimed2019javascript",
+    secret: setting.secret,
     resave: true,
     saveUninitialized: true
 }));
