@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="author" content="Pierre Barbin">
+        <link rel="shortcut icon" href="img/favicon.png">
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="/static/lib/materialize/css/materialize.min.css" rel="stylesheet"></link>
+        {% block css %}{% endblock %}
+
+        <title>Cap ou pas cap - {% block title %}{% endblock %}</title>
+
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+
+        {% block end_html %}{% endblock %}
+
+        <script src="/static/lib/materialize/js/materialize.min.js"></script>
+        {% block javascript %}{% endblock %}
+    </body>
+</html>
