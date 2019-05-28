@@ -1,15 +1,16 @@
 {% extends "../layouts/app.twig" %}
 
-{% block title %}{{ parent() }} - Modification{% endblock %}
+{% block title %}Mon compte - Modification{% endblock %}
 
 {% block body %}
     {{ parent() }}
 
     <div>
-        <h3 class="center-align">Modier mon compte</h3>
+        <h5>Modifier mon compte</h3>
+        <div class="divider"></div>
         <!-- Login Form -->
          <div class="row">
-            <form action="{{ url }}/account/edit" method="post" class="col s12 center-align">
+            <form action="{{ url }}/account/edit" method="post" class="col s12">
                 <div class="row">
                     <div class="input-field col s12">
                         <i class="material-icons prefix">face</i>

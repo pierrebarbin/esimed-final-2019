@@ -1,7 +1,10 @@
 const router = require('express').Router();
-
+const UserClass = require(`${appRoot}/models/user.js`);
 
 module.exports = (db) => {
+
+    const userdao = require(`${appRoot}/models/dao/userDAO.js`);
+    const user = new userdao(db);
 
     router.get('/', function (req,res) {
 
@@ -9,6 +12,13 @@ module.exports = (db) => {
     });
 
     router.get('/edit', function (req,res) {
+
+        let formFields = req.flash('formFields')[0] || {pseudo: req.user[0].pseudo, email: req.user[0].email};
+
+        req.param.addParams({
+            formError: req.flash('formError')[0],
+            formFields: formFields
+        });
 
         res.render('account/edit',req.param.connected(req));
     });
@@ -23,40 +33,86 @@ module.exports = (db) => {
             email: email
         }
 
+        let error_redirect_path = 'account/edit';
+
         //Required pseudo
         if(pseudo === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,'register',inputs,{pseudo: 'Le pseudo est requis.'});
+            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{pseudo: 'Le pseudo est requis.'});
         //Required email
         }else if(email === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,'register',inputs,{email: 'L\'e-mail est requis.'});
+            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{email: 'L\'e-mail est requis.'});
         //Valid email
         }else if(!req.regex.email(email)){
 
-            req.errorHelper.redirectWithInputs(req,res,'register',inputs, {email: 'L\'e-mail est invalide.'});
+            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'L\'e-mail est invalide.'});
 
         }else {
             //If the email is already taken
-            user.findOne({email: email},(err,email_exist) => {
+            user.findOne({email: email},(err,user_exist) => {
 
                 if(err){
-                    req.errorHelper.redirectWithInputs(req,res,'register',inputs, {email: 'Une erreur est survenue, veuillez réessayer plus tard.'});
+                    req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'Une erreur est survenue, veuillez réessayer plus tard.'});
                 }
 
-                if(email_exist){
+                if(user_exist && user_exist.email != req.user[0].email){
 
-                    req.errorHelper.redirectWithInputs(req,res,'register',inputs, {email: 'Cet e-mail est déjà utilisé.'});
+                    req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'Cet e-mail est déjà utilisé.'});
                 //Success !
                 }else{
 
-                    user.updateData({pseudo: pseudo, email: email})
-                    .then((userObj) => {
+                    user.updateData(req.user[0].id,{pseudo: pseudo, email: email})
+                    .then(() => {
                         //Add toast
                         res.redirect(`${req.urlHelper}/account`);
-                    });
+                    },()=>{});
                 }
             });
+        }
+    });
+
+    router.get('/password/change', function (req,res) {
+
+        req.param.addParams({
+            formError: req.flash('formError')[0],
+        });
+
+        res.render('account/password_edit',req.param.connected(req));
+    });
+
+    router.post('/password/change', function (req,res) {
+
+        let password = req.body.password;
+        let password_new = req.body.password_new;
+        let password_new_confirmation = req.body.password_new_confirmation;
+
+        let error_redirect_path = 'account/password/change'
+
+        if(password === ""){
+
+            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,{},{password: 'L\'ancien mot de passe est requis.'});
+
+        }else if(!UserClass.instanciate(req.user[0]).validPassword(password)){
+
+            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,{},{password: 'L\'ancien mot de passe est incorrect.'});
+
+        }else if(password_new === ""){
+
+            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,{},{password_new: 'Le nouveau mot de passe est requis.'});
+
+        }else if(password_new !== password_new_confirmation){
+
+            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,{},{password_new_confirmation: 'La confirmation ne correspond pas au nouveau mot de passe.'});
+
+         //Success !
+        }else{
+
+            user.updatePassword(req.user[0].id,{password: UserClass.hashPassword(password_new)})
+            .then(() => {
+                //Add toast
+                res.redirect(`${req.urlHelper}/account`);
+            },()=>{});
         }
     });
 

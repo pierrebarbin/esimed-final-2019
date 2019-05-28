@@ -64,6 +64,7 @@ module.exports = class UserDAO extends DAO {
         return new Promise((resolve, reject) => {
             this.db.run(`UPDATE ${this.table} SET email=?, pseudo=? WHERE id=?`,
                 [
+                    userObj.email,
                     userObj.pseudo,
                     id
                 ],
