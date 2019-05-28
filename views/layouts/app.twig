@@ -1,0 +1,39 @@
+{% extends "../layouts/base.twig" %}
+
+{% block user_info %}
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="https://www.frequence-sud.fr/admin/transfert/data/59635.jpg">
+            </div>
+            <a href="#name"><span class="white-text name">{{ user.pseudo }}</span></a>
+            <a href="#email"><span class="white-text email">{{ user.email }}</span></a>
+        </div>
+    </li>
+{% endblock %}
+
+{% block menu %}
+    {{ parent() }}
+    <li>
+        <a href="{{ url }}/account">
+            Mon compte
+            <i class="material-icons">account_circle</i>
+        </a>
+    </li>
+    <li>
+        <a href="{{ url }}/logout">
+            Déconnexion
+            <i class="material-icons">power_settings_new</i>
+        </a>
+    </li>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let fabs = document.querySelectorAll('.fixed-action-btn');
+            let instances = M.FloatingActionButton.init(fabs, {});
+        });
+    </script>
+{% endblock %}

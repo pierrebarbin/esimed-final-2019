@@ -38,6 +38,14 @@ module.exports = class Database {
                         FOREIGN KEY (challenge_id) REFERENCES challenges (id)
                     )`);
 
+                    db.run(`CREATE TABLE IF NOT EXISTS challenge_followed(
+                        user_id integer,
+                        challenge_id integer,
+                        PRIMARY KEY (user_id,challenge_id),
+                        FOREIGN KEY (user_id) REFERENCES users (id),
+                        FOREIGN KEY (challenge_id) REFERENCES challenges (id)
+                    )`);
+
                     db.run(`CREATE TABLE IF NOT EXISTS comments(
                         id integer PRIMARY KEY AUTOINCREMENT,
                         content text NOT NULL,

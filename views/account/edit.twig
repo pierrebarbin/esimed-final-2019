@@ -1,0 +1,39 @@
+{% extends "../layouts/app.twig" %}
+
+{% block title %}{{ parent() }} - Modification{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div>
+        <h3 class="center-align">Modier mon compte</h3>
+        <!-- Login Form -->
+         <div class="row">
+            <form action="{{ url }}/account/edit" method="post" class="col s12 center-align">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">face</i>
+                        <input type="text" id="pseudo" class="validate {{  formError.pseudo is defined ? 'invalid' : '' }}" name="pseudo" value="{{ formFields.pseudo }}">
+                        {% if formError.pseudo is defined %}
+                            <span class="helper-text" data-error="{{ formError.pseudo }}"></span>
+                        {% endif %}
+                        <label for="pseudo">Pseudo</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">alternate_email</i>
+                        <input type="email" id="email" class="validate {{  formError.email is defined ? 'invalid' : '' }} " name="email"  value="{{ formFields.email }}">
+                        {% if formError.email is defined %}
+                            <span class="helper-text" data-error="{{ formError.email }}"></span>
+                        {% endif %}
+                        <label for="email">E-mail</label>
+                    </div>
+                </div>
+                 <button class="btn waves-effect waves-light" type="submit">
+                    Modifier
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

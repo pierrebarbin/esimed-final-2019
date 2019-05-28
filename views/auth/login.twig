@@ -1,0 +1,41 @@
+{% extends "../layouts/auth.twig" %}
+
+{% block title %}S'authentifier{% endblock %}
+
+{% block menu %}
+    {{ parent() }}
+    <li>
+        <a href="{{ url }}/register">
+            Inscription
+            <i class="material-icons">person_add</i>
+        </a>
+    </li>
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <div>
+        <h3 class="center-align">Connexion</h3>
+        <!-- Login Form -->
+         <div class="row">
+            <form action="{{ url }}/login" method="post" class="col s12 center-align">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">alternate_email</i>
+                        <input type="text" id="login" class="validate" name="username">
+                        <label for="login">E-mail</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">lock</i>
+                        <input type="password" id="password" class="validate" name="password">
+                        <label for="password">Mot de passe</label>
+                    </div>
+                </div>
+                 <button class="btn waves-effect waves-light" type="submit">
+                    S'authentifier
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

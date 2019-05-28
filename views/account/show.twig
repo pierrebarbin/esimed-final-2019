@@ -1,0 +1,24 @@
+{% extends "../layouts/app.twig" %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <h4>Mon compte</h4>
+
+    <h5>{{ user.pseudo }}</h5>
+    <div class="divider"></div>
+    <h5>{{ user.email }}</h5>
+
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large cyan">
+            <i class="large material-icons">settings</i>
+        </a>
+        <ul>
+            <li><a href="#" class="btn-floating green"><i class="material-icons">lock</i></a></li>
+            <li><a href="{{ url }}/account/edit" class="btn-floating blue"><i class="material-icons">mode_edit</i></a></li>
+        </ul>
+    </div>
+
+{% endblock %}
