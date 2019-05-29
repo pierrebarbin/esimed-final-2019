@@ -87,7 +87,7 @@ module.exports = (db) => {
         let password_new = req.body.password_new;
         let password_new_confirmation = req.body.password_new_confirmation;
 
-        let error_redirect_path = 'account/password/change'
+        let error_redirect_path = 'account/password/change';
 
         if(password === ""){
 

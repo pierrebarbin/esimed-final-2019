@@ -41,6 +41,71 @@ module.exports = class ChallengeDAO extends DAO {
         });
     }
 
+    update(id,value,field){
+        let that = this;
+
+        return new Promise((resolve, reject) => {
+            this.db.run(`UPDATE ${this.table} SET ${field}=? WHERE id=?`,
+                [
+                    value,
+                    id
+                ],
+                function(err){
+                    if (err) {
+                        reject(err.message);
+                    }
+
+                    resolve();
+                });
+        });
+    }
+
+    findById(id){
+
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT * FROM ${this.table} WHERE id=? LIMIT 1`,
+                [
+                    id
+                ],
+                function(err,challenge){
+                    if (err) {
+                        reject(err.message);
+                    }
+
+                    if(typeof challenge[0] === 'undefined') {
+                        resolve(undefined);
+                    }
+                    else {
+                        resolve(challenge[0]);
+                    }
+                });
+        });
+    }
+
+    findByUser(id,user_id){
+
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT * FROM ${this.table} WHERE id=? AND user_id=? LIMIT 1`,
+                [
+                    id,
+                    user_id
+                ],
+                function(err,challenge){
+                    if (err) {
+                        reject(err.message);
+                    }
+
+                    if(challenge.length === 0) {
+                        resolve(undefined);
+                    }
+                    else {
+                        resolve(challenge[0]);
+                    }
+                });
+        });
+    }
+
+
     findAll(realized = false,popularity = false){
 
         let where = 'WHERE c.is_realized = 0';

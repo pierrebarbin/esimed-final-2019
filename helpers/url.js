@@ -15,5 +15,45 @@ module.exports = {
         }
 
         return url;
+    },
+
+    test: function(){
+        let queries = {};
+
+        let queryParams = ['realized','popularity'];
+
+        queryParams.forEach((param) => {
+
+            let query = '?';
+
+            if( req.query[param] === 'true'){
+
+                string = '';
+                let first = true;
+            }else{
+
+                string = `${param}=true`;
+                let first = false;
+            }
+
+            queryParams.forEach((param2) => {
+
+                if(param !== param2 && req.query[param2] === 'true'){
+                      if(!first){
+
+                        let separator = string.length === 0 ? '' : '&';
+
+                        query = query + separator + string;
+
+                    }else{
+                        query = query + string;
+                        first = false;
+                    }
+                }
+                console.log(query);
+            });
+
+            queries[param] = query;
+        });
     }
 }

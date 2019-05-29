@@ -1,0 +1,30 @@
+{% extends "../layouts/app.twig" %}
+
+{% block title %}Défis - Modification{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <div>
+        <h5>Modification du défis</h3>
+        <div class="divider"></div>
+        <!-- Login Form -->
+         <div class="row">
+            <form action="{{ url }}/challenge/edit/{{ challenge.id }}" method="post" class="col s12">
+                {% include 'challenge/form.twig' %}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let wordcounters = document.querySelectorAll('.materialize-textarea');
+            let wordcountersInstances = M.CharacterCounter.init(wordcounters, {});
+        });
+    </script>
+{% endblock %}

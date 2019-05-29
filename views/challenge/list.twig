@@ -1,5 +1,7 @@
 {% extends "../layouts/app.twig" %}
 
+{% block title %}Défis{% endblock %}
+
 {% block nav_dropdown %}
     <ul class="right">
         <li>
@@ -11,8 +13,9 @@
         </li>
     </ul>
     <ul id="nav-dropdown" class="dropdown-content">
-        <li><a href="">Réalisé</a></li>
-        <li><a href="">Popularité</a></li>
+        <li><a href="?">Récent</a></li>
+        <li><a href="?realized=true">Réalisé</a></li>
+        <li><a href="?popularity=true">Popularité</a></li>
     </ul>
 {% endblock %}
 
@@ -53,7 +56,7 @@
         {% endfor %}
 
          <div class="fixed-action-btn">
-            <a href="{{ url }}/challenge/add" class="btn-floating btn-large cyan">
+            <a href="{{ url }}/challenge/create" class="btn-floating btn-large cyan wave">
                 <i class="large material-icons">add</i>
             </a>
         </div>
