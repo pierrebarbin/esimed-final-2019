@@ -15,27 +15,19 @@
 
     </head>
     <body>
-        <nav>
-            <div class="nav-wrapper">
-                <a href="#" data-target="nav-mobile" class="top-nav sidenav-trigger full hide-on-large-only">
-                    <i class="material-icons">
-                        menu
-                    </i>
-                </a>
-                <ul class="right">
-                    <li>
-                        <a href="#!" class="dropdown-trigger" data-target="nav-dropdown">
-                            <i class="material-icons">
-                                more_vert
-                            </i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <ul id="nav-dropdown" class="dropdown-content">
-                {% block nav_dropdown %}{% endblock %}
-            </ul>
-        </nav>
+        <div class="navbar-fixed">
+            <nav>
+                <div class="nav-wrapper">
+                    <a href="#" data-target="nav-mobile" class="top-nav sidenav-trigger full hide-on-large-only">
+                        <i class="material-icons">
+                            menu
+                        </i>
+                    </a>
+                    {% block nav_dropdown %}{% endblock %}
+                </div>
+            </nav>
+        </div>
+
         <div class="container">
             <ul id="nav-mobile" class="sidenav">
                 {% block user_info %}{% endblock %}

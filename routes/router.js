@@ -5,6 +5,7 @@ const public = require('./public.js')(db);
 const regex = require(`${appRoot}/helpers/regex`);
 const errorHelper = require(`${appRoot}/helpers/error`);
 const param = require(`${appRoot}/helpers/param`);
+const momentHelper = require(`${appRoot}/helpers/moment`);
 const moment = require('moment');
 
 const challenge = require('./challenge.js')(db);
@@ -18,10 +19,14 @@ module.exports = (app) => {
     require(`${appRoot}/passport`)(db);
 
     app.use(function(req,res,next){
+
+        moment.locale('fr');
+
         req.setting = setting;
         req.urlHelper = urlHelper.base(req);
         req.regex = regex;
         req.errorHelper = errorHelper;
+        req.momentHelper = momentHelper;
         req.param = param;
         next();
     });
