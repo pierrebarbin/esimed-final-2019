@@ -1,5 +1,9 @@
 {% extends "../layouts/base.twig" %}
 
+{% block css %}
+    <link rel="stylesheet" href="/static/css/app.css">
+{% endblock %}
+
 {% block user_info %}
     <li>
         <div class="user-view">
@@ -14,6 +18,12 @@
 
 {% block menu %}
     {{ parent() }}
+    <li>
+        <a href="{{ url }}/challenge">
+            Défis
+            <i class="material-icons">assignment</i>
+        </a>
+    </li>
     <li>
         <a href="{{ url }}/account">
             Mon compte

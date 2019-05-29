@@ -1,6 +1,69 @@
 {% extends "../layouts/app.twig" %}
 
+{% block nav_dropdown %}
+    <ul class="right">
+        <li>
+            <a href="#!" class="dropdown-trigger" data-target="nav-dropdown">
+                <i class="material-icons">
+                    filter_list
+                </i>
+            </a>
+        </li>
+    </ul>
+    <ul id="nav-dropdown" class="dropdown-content">
+        <li><a href="">Réalisé</a></li>
+        <li><a href="">Popularité</a></li>
+    </ul>
+{% endblock %}
+
 {% block body %}
     {{ parent() }}
 
+    <div class="row">
+        {% for challenge in challenges %}
+            <div class="col s12">
+                <div class="card card-challenge">
+                    {% if challenge.is_realized == 1 %}
+                        <div class="challenge-realized">
+                            <i class="material-icons small green-text" title="Réalisé">beenhere</i>
+                        </div>
+                    {% endif %}
+                    <div class="card-content">
+                        <div class="valign-wrapper">
+                            <span class="challenge-pseudo">{{ challenge.user_pseudo }}</span>
+                            <small class="grey-text right">{{ challenge.created_at }}</small>
+                        </div>
+                        <p>{{ challenge.content }}</p>
+                    </div>
+                    <div class="card-action valign-wrapper">
+                        <div>
+                            <span class="valign-wrapper">
+                                <i class="material-icons">thumb_up</i>
+                                <span>{{ challenge.amount_like }}</span>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="valign-wrapper">
+                                <i class="material-icons">star_border</i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+         <div class="fixed-action-btn">
+            <a href="{{ url }}/challenge/add" class="btn-floating btn-large cyan">
+                <i class="large material-icons">add</i>
+            </a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="/static/js/Router.js"></script>
+    <script>
+        let router = new Router();
+    </script>
 {% endblock %}

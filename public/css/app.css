@@ -1,0 +1,40 @@
+.card-challenge .challenge-realized{
+    position: absolute;
+    top:-4px;
+    right:6px;
+}
+
+.card-challenge .card-content .valign-wrapper{
+    margin-bottom: 10px;
+}
+
+.card-challenge .valign-wrapper > small{
+    margin-left: auto;
+}
+
+.card-challenge .challenge-pseudo{
+
+    display: inline-block;
+    font-size: 1.15rem;
+}
+
+.card-challenge .card-action {
+
+    padding: 6px 24px;
+}
+
+.card-challenge .card-action > div {
+
+    display: inline-block;
+}
+
+.card-challenge .card-action > div:last-child {
+
+    margin-left: auto;
+}
+
+.card-challenge .card-action .valign-wrapper > span {
+
+    display: inline-block;
+    margin: 0px 3px;
+}
