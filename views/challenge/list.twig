@@ -13,9 +13,9 @@
         </li>
     </ul>
     <ul id="nav-dropdown" class="dropdown-content">
-        <li><a href="?">Récent</a></li>
-        <li><a href="?realized=true">Réalisé</a></li>
-        <li><a href="?popularity=true">Popularité</a></li>
+        <li><a class="filter" href="#!" data-href="?">Récent</a></li>
+        <li><a class="filter" href="#!" data-href="?realized=true">Réalisé</a></li>
+        <li><a class="filter" href="#!" data-href="?popularity=true">Popularité</a></li>
     </ul>
 {% endblock %}
 
@@ -68,5 +68,26 @@
     <script src="/static/js/Router.js"></script>
     <script>
         let router = new Router();
+
+        if(router.queyStringStorageKeyExists()){
+            router.getStorageQueryString();
+        }
+
+        router.persistCurrentQueryString();
+
+        let filters = document.querySelectorAll('.filter');
+
+         for(var i = 0; i < filters.length; i++) {
+            filters[i].addEventListener('click', function() {
+
+                let data = this.getAttribute('data-href');
+
+                router.removeStorageQueryString();
+
+                let location = `${router.fullUrl()}${data}`;
+
+                router.redirect({location:location});
+            });
+        }
     </script>
 {% endblock %}

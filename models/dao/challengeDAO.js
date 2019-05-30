@@ -72,7 +72,7 @@ module.exports = class ChallengeDAO extends DAO {
                         reject(err.message);
                     }
 
-                    if(typeof challenge[0] === 'undefined') {
+                    if(challenge.length === 0) {
                         resolve(undefined);
                     }
                     else {
