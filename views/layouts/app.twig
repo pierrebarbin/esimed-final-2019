@@ -44,6 +44,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             let fabs = document.querySelectorAll('.fixed-action-btn');
             let instances = M.FloatingActionButton.init(fabs, {});
+
+            {% if toast.length > 0 %}
+                let toast = {{ toast[0]|json_encode() }};
+                M.toast({html: toast })
+            {% endif %}
         });
     </script>
 {% endblock %}

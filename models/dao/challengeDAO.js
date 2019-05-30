@@ -82,7 +82,7 @@ module.exports = class ChallengeDAO extends DAO {
         });
     }
 
-    findByUser(id,user_id){
+    findOneByUser(id,user_id){
 
         return new Promise((resolve, reject) => {
             this.db.all(`SELECT * FROM ${this.table} WHERE id=? AND user_id=? LIMIT 1`,
@@ -101,6 +101,25 @@ module.exports = class ChallengeDAO extends DAO {
                     else {
                         resolve(challenge[0]);
                     }
+                });
+        });
+    }
+
+
+    findByUser(user_id){
+
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT * FROM ${this.table} WHERE user_id=?`,
+                [
+                    user_id
+                ],
+                (err, challenges) => {
+
+                    if(err){
+                        reject(err);
+                    }
+
+                    resolve(challenges);
                 });
         });
     }

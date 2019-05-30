@@ -42,35 +42,35 @@ module.exports = (db) => {
         //Required pseudo
         if(pseudo === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,'register',inputs,{pseudo: 'Le pseudo est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,'register',inputs,{pseudo: 'Le pseudo est requis.'});
         //Required email
         }else if(email === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,'register',inputs,{email: 'L\'e-mail est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,'register',inputs,{email: 'L\'e-mail est requis.'});
         //Valid email
         }else if(!req.regex.email(email)){
 
-            req.errorHelper.redirectWithInputs(req,res,'register',inputs, {email: 'L\'e-mail est invalide.'});
+            req.redirectHelper.redirectWithInputs(req,res,'register',inputs, {email: 'L\'e-mail est invalide.'});
 
         }else {
             //If the email is already taken
             user.findOne({email: email},(err,email_exist) => {
 
                 if(err){
-                    req.errorHelper.redirectWithInputs(req,res,'register',inputs, {email: 'Une erreur est survenue, veuillez réessayer plus tard.'});
+                    req.redirectHelper.redirectWithInputs(req,res,'register',inputs, {email: 'Une erreur est survenue, veuillez réessayer plus tard.'});
                 }
 
                 if(email_exist){
 
-                    req.errorHelper.redirectWithInputs(req,res,'register',inputs, {email: 'Cet e-mail est déjà utilisé.'});
+                    req.redirectHelper.redirectWithInputs(req,res,'register',inputs, {email: 'Cet e-mail est déjà utilisé.'});
                 //Required password
                 }else if(password === ""){
 
-                    req.errorHelper.redirectWithInputs(req,res,'register',inputs, {password: 'Le mot de passe est requis.'});
+                    req.redirectHelper.redirectWithInputs(req,res,'register',inputs, {password: 'Le mot de passe est requis.'});
                 //password and its confirmation doesn't match
                 }else if(password !== password_confirm){
 
-                    req.errorHelper.redirectWithInputs(req,res,'register',inputs, {password_confirm: 'Les mots de passe ne correspondent pas.'});
+                    req.redirectHelper.redirectWithInputs(req,res,'register',inputs, {password_confirm: 'Les mots de passe ne correspondent pas.'});
                 //Success !
                 }else{
 

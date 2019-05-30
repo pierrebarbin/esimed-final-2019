@@ -3,7 +3,7 @@ const urlHelper = require(`${appRoot}/helpers/url`);
 const setting = require(`${appRoot}/setting`);
 const public = require('./public.js')(db);
 const regex = require(`${appRoot}/helpers/regex`);
-const errorHelper = require(`${appRoot}/helpers/error`);
+const redirectHelper = require(`${appRoot}/helpers/redirect`);
 const param = require(`${appRoot}/helpers/param`);
 const momentHelper = require(`${appRoot}/helpers/moment`);
 const moment = require('moment');
@@ -25,7 +25,7 @@ module.exports = (app) => {
         req.setting = setting;
         req.urlHelper = urlHelper.base(req);
         req.regex = regex;
-        req.errorHelper = errorHelper;
+        req.redirectHelper = redirectHelper;
         req.momentHelper = momentHelper;
         req.param = param;
         next();

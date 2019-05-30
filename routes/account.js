@@ -4,11 +4,22 @@ const UserClass = require(`${appRoot}/models/user.js`);
 module.exports = (db) => {
 
     const userdao = require(`${appRoot}/models/dao/userDAO.js`);
+    const challengedao = require(`${appRoot}/models/dao/challengeDAO.js`);
     const user = new userdao(db);
+    const challenge = new challengedao(db);
 
     router.get('/', function (req,res) {
 
-        res.render('account/show',req.param.connected(req));
+        challenge.findByUser(req.user[0].id)
+        .then((challenges)=>{
+
+            req.param.addParams({
+                challenges: challenges
+            });
+
+            res.render('account/show',req.param.connected(req));
+
+        },(err) => {console.log(err)});
     });
 
     router.get('/edit', function (req,res) {
@@ -38,27 +49,27 @@ module.exports = (db) => {
         //Required pseudo
         if(pseudo === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{pseudo: 'Le pseudo est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{pseudo: 'Le pseudo est requis.'});
         //Required email
         }else if(email === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{email: 'L\'e-mail est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{email: 'L\'e-mail est requis.'});
         //Valid email
         }else if(!req.regex.email(email)){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'L\'e-mail est invalide.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'L\'e-mail est invalide.'});
 
         }else {
             //If the email is already taken
             user.findOne({email: email},(err,user_exist) => {
 
                 if(err){
-                    req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'Une erreur est survenue, veuillez réessayer plus tard.'});
+                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'Une erreur est survenue, veuillez réessayer plus tard.'});
                 }
 
                 if(user_exist && user_exist.email != req.user[0].email){
 
-                    req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'Cet e-mail est déjà utilisé.'});
+                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {email: 'Cet e-mail est déjà utilisé.'});
                 //Success !
                 }else{
 
@@ -91,19 +102,19 @@ module.exports = (db) => {
 
         if(password === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,{},{password: 'L\'ancien mot de passe est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,{},{password: 'L\'ancien mot de passe est requis.'});
 
         }else if(!UserClass.instanciate(req.user[0]).validPassword(password)){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,{},{password: 'L\'ancien mot de passe est incorrect.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,{},{password: 'L\'ancien mot de passe est incorrect.'});
 
         }else if(password_new === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,{},{password_new: 'Le nouveau mot de passe est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,{},{password_new: 'Le nouveau mot de passe est requis.'});
 
         }else if(password_new !== password_new_confirmation){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,{},{password_new_confirmation: 'La confirmation ne correspond pas au nouveau mot de passe.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,{},{password_new_confirmation: 'La confirmation ne correspond pas au nouveau mot de passe.'});
 
          //Success !
         }else{

@@ -43,11 +43,11 @@ module.exports = (db) => {
 
         if(content === ""){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
 
         }else if(content.length > 140){
 
-            req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
 
         }else{
 
@@ -59,7 +59,7 @@ module.exports = (db) => {
                 created_at: req.moment().unix()
             })
             .then((challenge)=>{
-                res.redirect(`${req.urlHelper}/challenge`);
+                req.redirectHelper.redirectWithToast(req,res,'challenge','Défi ajouté avec succès');
             },()=>{})
 
         }
@@ -69,7 +69,7 @@ module.exports = (db) => {
 
         let id = req.params.id;
 
-        challenge.findByUser(id,req.user[0].id)
+        challenge.findOneByUser(id,req.user[0].id)
         .then((challengeObj) => {
 
             if(challengeObj){
@@ -100,24 +100,25 @@ module.exports = (db) => {
 
         let inputs = {content: content};
 
-        challenge.findByUser(id,req.user[0].id)
+        challenge.findOneByUser(id,req.user[0].id)
         .then((challengeObj) => {
 
             if(challengeObj){
 
                 if(content === ""){
 
-                    req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
+                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
 
                 }else if(content.length > 140){
 
-                    req.errorHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
+                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
 
                 }else{
 
                     challenge.update(id,content,'content')
                     .then(()=>{
-                        res.redirect(`${req.urlHelper}/challenge`);
+
+                        req.redirectHelper.redirectWithToast(req,res,'account','Défi modifié avec succès');
                     },()=>{})
 
                 }

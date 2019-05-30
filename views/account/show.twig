@@ -7,9 +7,48 @@
 
     <h4>Mon compte</h4>
 
-    <h6>{{ user.pseudo }}</h5>
+    <h6>{{ user.pseudo }}</h6>
     <div class="divider"></div>
-    <h6>{{ user.email }}</h5>
+    <h6>{{ user.email }}</h6>
+
+    <ul class="collection with-header challenge-personal">
+        <li class="collection-header"><h6><b>Mes défis</b></h6></li>
+        <ul class="collapsible popout">
+            {% for challenge in challenges %}
+                {#<li class="collection-item">
+                    <div>
+                        <div class="row">
+                            <div class="col s10 truncate">
+                                {{ challenge.content }}
+                            </div>
+                            <div class="col s2">
+                                <a href="{{ url }}/challenge/edit/{{ challenge.id }}" class="secondary-content">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>#}
+                <li>
+                    <div class="collapsible-header">
+                        <div class="row">
+                            <div class="col s10 truncate">
+                                {{ challenge.content }}
+                            </div>
+                            <div class="col s2">
+                                <a href="{{ url }}/challenge/edit/{{ challenge.id }}" class="secondary-content">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapsible-body">
+                        <span>Lorem ipsum dolor sit amet.</span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </ul>
 
     <div class="fixed-action-btn">
         <a class="btn-floating btn-large cyan">
@@ -21,4 +60,14 @@
         </ul>
     </div>
 
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            let collapsible = document.querySelectorAll('.collapsible');
+            let collapsibleinstances = M.Collapsible.init(collapsible, {});
+        });
+    </script>
 {% endblock %}

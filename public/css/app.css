@@ -38,3 +38,22 @@
     display: inline-block;
     margin: 0px 3px;
 }
+
+.challenge-personal{
+    margin-top: 20px;
+}
+
+.challenge-personal .collapsible{
+    margin: 0px;
+    border-top:none;
+    border-right:none;
+    border-left:none;
+}
+
+.challenge-personal .collapsible-header{
+    display:block;
+}
+
+.challenge-personal .row{
+    margin-bottom: 0px;
+}

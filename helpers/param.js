@@ -14,7 +14,8 @@ module.exports = {
             user: req.user[0],
             moment: req.moment,
             url: req.urlHelper,
-            setting: req.setting
+            setting: req.setting,
+            toast: req.flash('toast'),
         });
     },
 
