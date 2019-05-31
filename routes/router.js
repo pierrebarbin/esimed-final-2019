@@ -10,6 +10,7 @@ const moment = require('moment');
 
 const challenge = require('./challenge.js')(db);
 const account = require('./account.js')(db);
+const like = require('./like.js')(db);
 
 module.exports = (app) => {
 
@@ -50,6 +51,7 @@ module.exports = (app) => {
 
     app.use('/account', account);
     app.use('/challenge', challenge);
+    app.use('/like', like);
 
     app.get(`/logout`, (req, res) => {
         req.logout();

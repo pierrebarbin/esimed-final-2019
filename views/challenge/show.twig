@@ -1,0 +1,87 @@
+{% extends "../layouts/app.twig" %}
+
+{% block title %}Défis - Détails{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <h5><b>{{challenge.user_pseudo}}</b></h5>
+    <div class="divider"></div>
+
+    <button class="btn-small waves-effect waves-light challenge-like {{ challenge.is_liked > 0 ? 'cyan' : 'black' }}" data-id="{{ challenge.id }}">
+        <span class="valign-wrapper">
+            <i class="material-icons  white-text">thumb_up</i>
+            <span class="amount-like white-text m-l-5">{{ challenge.amount_like }}</span>
+        </span>
+    </button>
+
+    <div class="m-t-20">
+        <p>{{ challenge.content }}</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <h6><b>Commentaires</b></h6>
+
+     <ul class="collection">
+        <li class="collection-item avatar">
+            <i class="material-icons circle green">person_pin</i>
+            <span class="title">Title</span>
+            <p>First Line <br>
+                Second Line
+            </p>
+            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block javascript %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            let likes = document.querySelectorAll('.challenge-like');
+
+            for(var i = 0; i < likes.length; i++) {
+                likes[i].addEventListener('click', function() {
+
+                    let that = this;
+
+                    let challenge_id = that.getAttribute('data-id');
+
+                    let amount = that.querySelector('.amount-like');
+
+                     $.ajax({
+                        method: "POST",
+                        url: '{{ url }}/like',
+                        data: {
+                            challenge_id: challenge_id,
+                        }
+                    })
+                    .done(function( result ) {
+
+                        if(result.status === 'deleted'){
+                            that.classList.remove('cyan');
+                            that.classList.add('black');
+                        }else if(result.status === 'inserted'){
+                            that.classList.remove('black');
+                            that.classList.add('cyan');
+                        }
+
+                        amount.innerHTML = result.quantity;
+                    })
+                    .fail(function( jqXHR, textStatus ) {
+
+                        if(jqXHR === 404){
+                            M.toast({html: 'Ce défi n\'existe pas.' });
+                        }else{
+                            M.toast({html: 'Une erreur est survenue, veuillez réessayer plus tard.' });
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+{% endblock %}

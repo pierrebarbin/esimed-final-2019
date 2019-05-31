@@ -1,17 +1,21 @@
 const router = require('express').Router();
 
+const isOwnerChallenge = require(`${appRoot}/middlewares/IsOwnerChallenge`);
+const challengeExist = require(`${appRoot}/middlewares/ChallengeExist`);
 
 module.exports = (db) => {
 
     const challengedao = require(`${appRoot}/models/dao/challengeDAO.js`);
+    const commentdao = require(`${appRoot}/models/dao/commentDAO.js`);
     const challenge = new challengedao(db);
+    const comment = new commentdao(db);
 
     router.get('/', function (req,res) {
 
         let realized = req.query.realized === 'true' ? true : false;
         let popularity = req.query.popularity === 'true' ? true : false;
 
-        challenge.findAll(realized,popularity)
+        challenge.findAll(req.user[0],realized,popularity)
         .then((challenges) => {
 
             req.param.addParams({
@@ -21,6 +25,20 @@ module.exports = (db) => {
             res.render('challenge/list',req.param.connected(req));
 
         },(err) => {console.log(err);});
+    });
+
+    router.get('/show/:id',challengeExist, function (req,res) {
+
+        let challengeObj = req.challengeObj;
+
+        comment
+
+        req.param.addParams({
+            challenge: req.momentHelper.transform([challengeObj],'created_at')[0],
+        });
+
+        res.render('challenge/show',req.param.connected(req));
+
     });
 
     router.get('/create', function (req,res) {
@@ -65,69 +83,51 @@ module.exports = (db) => {
         }
     });
 
-    router.get('/edit/:id', function (req,res) {
+    router.get('/edit/:id',isOwnerChallenge, function (req,res) {
 
         let id = req.params.id;
 
-        challenge.findOneByUser(id,req.user[0].id)
-        .then((challengeObj) => {
+        let challengeObj = req.challengeObj;
 
-            if(challengeObj){
+        let formFields = req.flash('formFields')[0] || challengeObj;
 
-                let formFields = req.flash('formFields')[0] || challengeObj;
+        req.param.addParams({
+            formError: req.flash('formError')[0],
+            formFields: formFields,
+            challenge: challengeObj
+        });
 
-                req.param.addParams({
-                    formError: req.flash('formError')[0],
-                    formFields: formFields,
-                    challenge: challengeObj
-                });
-
-                res.render('challenge/edit',req.param.connected(req));
-            }else{
-
-                res.render('error/404',req.param.connected(req));
-            }
-
-        },(err) => {console.log(err)});
+        res.render('challenge/edit',req.param.connected(req));
     });
 
-    router.post('/edit/:id', function (req,res) {
+    router.post('/edit/:id',isOwnerChallenge, function (req,res) {
 
         let id = req.params.id;
+        let challengeObj = req.challengeObj;
+
         let content = req.body.content;
 
         let error_redirect_path = 'challenge/edit';
 
         let inputs = {content: content};
 
-        challenge.findOneByUser(id,req.user[0].id)
-        .then((challengeObj) => {
+        if(content === ""){
 
-            if(challengeObj){
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
 
-                if(content === ""){
+        }else if(content.length > 140){
 
-                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
 
-                }else if(content.length > 140){
+        }else{
 
-                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
+            challenge.update(id,content,'content')
+            .then(()=>{
 
-                }else{
+                req.redirectHelper.redirectWithToast(req,res,'account','Défi modifié avec succès');
+            },()=>{})
 
-                    challenge.update(id,content,'content')
-                    .then(()=>{
-
-                        req.redirectHelper.redirectWithToast(req,res,'account','Défi modifié avec succès');
-                    },()=>{})
-
-                }
-            }else{
-
-                res.redirect(`${req.urlHelper}/challenge`);
-            }
-
-        },(err) => {console.log(err)});
+        }
     });
 
     return router;

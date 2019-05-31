@@ -82,6 +82,49 @@ module.exports = class ChallengeDAO extends DAO {
         });
     }
 
+    findByIdWithDetails(id,user_id){
+
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT
+                (SELECT
+                        COUNT(*)
+                    FROM
+                        likes as l
+                    WHERE
+                        l.user_id=?
+                        AND
+                        l.challenge_id=c.id
+                    )as is_liked,
+                    c.id,
+                    c.content,
+                    c.is_realized,
+                    c.amount_like,
+                    c.created_at,
+                    u.id as user_id,
+                    u.pseudo as user_pseudo
+                FROM ${this.table} as c
+                LEFT JOIN
+                    users as u ON c.user_id = u.id
+                WHERE c.id=? LIMIT 1`,
+                [
+                    user_id,
+                    id
+                ],
+                function(err,challenge){
+                    if (err) {
+                        reject(err.message);
+                    }else{
+                         if(challenge.length === 0) {
+                            resolve(undefined);
+                        }
+                        else {
+                            resolve(challenge[0]);
+                        }
+                    }
+                });
+        });
+    }
+
     findOneByUser(id,user_id){
 
         return new Promise((resolve, reject) => {
@@ -125,7 +168,7 @@ module.exports = class ChallengeDAO extends DAO {
     }
 
 
-    findAll(realized = false,popularity = false){
+    findAll(user,realized = false,popularity = false){
 
         let where = 'WHERE c.is_realized = 0';
 
@@ -140,13 +183,32 @@ module.exports = class ChallengeDAO extends DAO {
         }
 
         return new Promise((resolve, reject) => {
-            this.db.all(`SELECT c.id,c.content,c.is_realized,c.amount_like,c.created_at,u.id as user_id,u.pseudo as user_pseudo
+            this.db.all(`
+            SELECT
+                (SELECT
+                    COUNT(*)
+                FROM
+                    likes as l
+                WHERE
+                    l.user_id=?
+                    AND
+                    l.challenge_id=c.id
+                )as is_liked,
+                c.id,
+                c.content,
+                c.is_realized,
+                c.amount_like,
+                c.created_at,
+                u.id as user_id,
+                u.pseudo as user_pseudo
             FROM ${this.table} as c
             LEFT JOIN
                 users as u ON c.user_id = u.id
             ${where}
             ${orderby}`,
-            [],
+            [
+                user.id
+            ],
             (err, challenges) => {
 
                 if(err){

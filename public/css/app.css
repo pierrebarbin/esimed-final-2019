@@ -8,6 +8,11 @@
     margin-bottom: 10px;
 }
 
+.card-challenge .waves-effect{
+    display:block;
+    color:black;
+}
+
 .card-challenge .valign-wrapper > small{
     margin-left: auto;
 }
@@ -56,4 +61,29 @@
 
 .challenge-personal .row{
     margin-bottom: 0px;
+}
+
+button.challenge-like{
+    margin-top:20px;
+}
+
+.m-l-5{
+    margin-left:5px;
+}
+
+.m-r-5{
+    margin-right:5px;
+}
+
+.m-t-10{
+    margin-top:10px;
+}
+.m-t-20{
+    margin-top:20px;
+}
+.m-b-10{
+    margin-bottom:10px;
+}
+.m-b-20{
+    margin-bottom:20px;
 }
