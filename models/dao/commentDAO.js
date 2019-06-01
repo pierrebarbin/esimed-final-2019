@@ -9,22 +9,75 @@ module.exports = class CommentDAO extends DAO {
         this.table = "comments";
     }
 
-    findByChallenge(id){
+    insert(commentObj){
+
+        let that = this;
+
+        return new Promise((resolve, reject) => {
+            this.db.run(`INSERT INTO ${this.table}(content,is_proof,media,type_media,is_accepted,user_id,challenge_id,created_at) VALUES(?,?,?,?,?,?,?,?)`,
+            [
+                commentObj.content,
+                commentObj.is_proof,
+                commentObj.media,
+                commentObj.type_media,
+                commentObj.is_accepted,
+                commentObj.user_id,
+                commentObj.challenge_id,
+                commentObj.created_at
+            ],
+            function(err) {
+                if (err) {
+                    reject(err.message);
+                }else{
+                    // get the last insert id
+                    console.log(`A row has been inserted with rowid ${this.lastID} in table ${that.table}`);
+                    resolve( new comment(
+                        this.lastID,
+                        commentObj.content,
+                        commentObj.is_proof,
+                        commentObj.media,
+                        commentObj.type_media,
+                        commentObj.is_accepted,
+                        commentObj.user_id,
+                        commentObj.challenge_id,
+                        commentObj.created_at
+                    ));
+                }
+            });
+        });
+    }
+
+    findByChallenge(challenge_id){
         return new Promise((resolve, reject) => {
             this.db.all(`
             SELECT
-                *
-            FROM ${this.table}`,
+                c.id,
+                c.content,
+                c.is_proof,
+                c.created_at,
+                c.media,
+                c.type_media,
+                c.is_accepted,
+                u.id as user_id,
+                u.pseudo as user_pseudo
+            FROM
+                ${this.table} as c
+            LEFT JOIN
+                users as u ON c.user_id=u.id
+            WHERE
+                challenge_id=?
+            ORDER BY
+                c.created_at DESC`,
             [
-                user.id
+                challenge_id
             ],
-            (err, challenges) => {
+            (err, comments) => {
 
                 if(err){
                     reject(err);
                 }
 
-                resolve(challenges);
+                resolve(comments);
             });
         });
     }

@@ -31,14 +31,20 @@ module.exports = (db) => {
 
         let challengeObj = req.challengeObj;
 
-        comment
+        comment.findByChallenge(challengeObj.id)
+        .then((comments) => {
 
-        req.param.addParams({
-            challenge: req.momentHelper.transform([challengeObj],'created_at')[0],
-        });
+            req.param.addParams({
+                formError: req.flash('formError')[0],
+                formFields: req.flash('formFields')[0],
+                formType: req.flash('formType')[0],
+                comments: req.momentHelper.transform(comments,'created_at'),
+                challenge: req.momentHelper.transform([challengeObj],'created_at')[0],
+            });
 
-        res.render('challenge/show',req.param.connected(req));
+            res.render('challenge/show',req.param.connected(req));
 
+        },(err)=>{console.log(err);});
     });
 
     router.get('/create', function (req,res) {
@@ -127,6 +133,44 @@ module.exports = (db) => {
                 req.redirectHelper.redirectWithToast(req,res,'account','Défi modifié avec succès');
             },()=>{})
 
+        }
+    });
+
+    router.post('/:id/comment/create',challengeExist, function (req,res) {
+
+        let challengeObj = req.challengeObj;
+        let content = req.body.content;
+
+        let error_redirect_path = `challenge/show/${challengeObj.id}#create`;
+
+        let inputs = {content: content};
+
+        if(content === ""){
+
+            req.flash('formType','create');
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
+
+        }else if(content.length > 140){
+            req.flash('formType','create');
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
+
+        }else{
+
+            comment.insert({
+                content: content,
+                is_proof: 0,
+                media: null,
+                type_media: null,
+                is_accepted: 0,
+                user_id: req.user[0].id,
+                challenge_id: challengeObj.id,
+                created_at: req.moment().unix(),
+            })
+            .then(() => {
+
+                req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire ajouté avec succès');
+
+            },(err)=>{console.log(err)});
         }
     });
 

@@ -21,25 +21,63 @@
 
     <div class="divider"></div>
 
-    <h6><b>Commentaires</b></h6>
-
+    <div class="w-100">
+        <h6 class="d-inline-block"><b>Commentaires</b></h6>
+        <a href="#create" class="waves-effect waves-light right m-t-10 m-r-10 modal-trigger" title="Ajouter un commentaire"><i class="material-icons small">add_comment</i></a>
+    </div>
+    <div class="clearfix"></div>
      <ul class="collection">
-        <li class="collection-item avatar">
-            <i class="material-icons circle green">person_pin</i>
-            <span class="title">Title</span>
-            <p>First Line <br>
-                Second Line
-            </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
+        {% for comment in comments %}
+            <li class="collection-item avatar">
+                <i class="material-icons circle">person</i>
+                <span class="title">{{ comment.user_pseudo }}</span>
+                <small class="grey-text">{{ comment.created_at }}</small>
+                <p>
+                    {{ comment.content }}
+                </p>
+                {% if user.id == comment.user_id %}
+                    <a href="#!" class="secondary-content"><i class="material-icons">edit</i></a>
+                {% endif %}
+            </li>
+        {% endfor %}
     </ul>
 {% endblock %}
 
-{% block javascript %}
+{% block end_html %}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <div id="create" class="modal">
+        <div class="modal-content">
+            <h5 class="m-t-0">Ajouter un commentaire</h4>
+            <div class="row">
+                <form action="{{ url }}/challenge/{{ challenge.id }}/comment/create" method="post" class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">comment</i>
+                            <textarea id="content" name="content" class="materialize-textarea validate {{  formError.content is defined ? 'invalid' : '' }}" data-length="140">{{ formFields.content }}</textarea>
+                            {% if formError.content is defined %}
+                                <span class="helper-text" data-error="{{ formError.content }}"></span>
+                            {% endif %}
+                            <label for="content">Contenu</label>
+                        </div>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit">
+                        Ajouter !
+                        <i class="material-icons right">send</i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            let wordcounters = document.querySelectorAll('.materialize-textarea');
+            let wordcountersInstances = M.CharacterCounter.init(wordcounters, {});
 
             let likes = document.querySelectorAll('.challenge-like');
 
@@ -81,6 +119,10 @@
                     });
                 });
             }
+
+            {% if formType is defined %}
+                $('#{{formType}}').modal('open');
+            {% endif %}
         });
     </script>
 

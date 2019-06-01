@@ -43,7 +43,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let fabs = document.querySelectorAll('.fixed-action-btn');
-            let instances = M.FloatingActionButton.init(fabs, {});
+            let fabsinstances = M.FloatingActionButton.init(fabs, {});
+
+            let modals = document.querySelectorAll('.modal');
+            let modalsinstances = M.Modal.init(modals, {});
 
             {% if toast.length > 0 %}
                 let toast = {{ toast[0]|json_encode() }};

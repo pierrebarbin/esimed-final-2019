@@ -1,6 +1,7 @@
 const sql = require('sqlite3');
 const userSeeder = require(`${appRoot}/database/seeder/userSeeder.js`);
 const challengeSeeder = require(`${appRoot}/database/seeder/challengeSeeder.js`);
+const commentSeeder = require(`${appRoot}/database/seeder/commentSeeder.js`);
 
 module.exports = class Database {
     constructor() {}
@@ -64,7 +65,9 @@ module.exports = class Database {
                     if(seeder){
                         userSeeder.seed((user) => {
                             challengeSeeder.seed((challenge) => {
+                                commentSeeder.seed((comment) => {
 
+                                },db,user.id,challenge.id);
                             },db,user.id);
                         },db);
 
