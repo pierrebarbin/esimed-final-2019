@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const isOwnerChallenge = require(`${appRoot}/middlewares/IsOwnerChallenge`);
+const isOwnerComment = require(`${appRoot}/middlewares/IsOwnerComment`);
 const challengeExist = require(`${appRoot}/middlewares/ChallengeExist`);
 
 module.exports = (db) => {
@@ -143,16 +144,16 @@ module.exports = (db) => {
 
         let error_redirect_path = `challenge/show/${challengeObj.id}#create`;
 
-        let inputs = {content: content};
+        let inputs = {create: {content: content}};
 
         if(content === ""){
 
             req.flash('formType','create');
-            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{create: {content: 'Le contenu est requis.'}});
 
         }else if(content.length > 140){
             req.flash('formType','create');
-            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{create: {content: 'Le contenu doit faire 140 caractères maximum.'}});
 
         }else{
 
@@ -169,6 +170,53 @@ module.exports = (db) => {
             .then(() => {
 
                 req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire ajouté avec succès');
+
+            },(err)=>{console.log(err)});
+        }
+    });
+
+
+    router.get('/:id/comment/edit/:comment_id',challengeExist,isOwnerComment, function (req,res) {
+
+        let challengeObj = req.challengeObj;
+        let commentObj = req.commentObj;
+
+        let formFields = req.flash('formFields')[0] || commentObj;
+
+        req.param.addParams({
+            formError: req.flash('formError')[0],
+            formFields: formFields,
+            challenge: challengeObj,
+            comment: commentObj,
+        });
+
+        res.render('comment/edit',req.param.connected(req));
+    });
+
+    router.post('/:id/comment/edit/:comment_id',challengeExist,isOwnerComment, function (req,res) {
+
+        let challengeObj = req.challengeObj;
+        let commentObj = req.commentObj;
+        let content = req.body.content;
+
+        let error_redirect_path = `challenge/show/${challengeObj.id}#edit`;
+
+        let inputs = {content: content};
+
+        if(content === ""){
+
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
+
+        }else if(content.length > 140){
+
+            req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu doit faire 140 caractères maximum.'});
+
+        }else{
+
+            comment.update(commentObj.id,content,'content')
+            .then(() => {
+
+                req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire modifié avec succès');
 
             },(err)=>{console.log(err)});
         }

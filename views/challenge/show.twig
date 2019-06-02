@@ -36,7 +36,7 @@
                     {{ comment.content }}
                 </p>
                 {% if user.id == comment.user_id %}
-                    <a href="#!" class="secondary-content"><i class="material-icons">edit</i></a>
+                    <a href="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}" class="secondary-content" data-content=""><i class="material-icons">edit</i></a>
                 {% endif %}
             </li>
         {% endfor %}
@@ -45,7 +45,7 @@
 
 {% block end_html %}
 
-      <div id="create" class="modal">
+    <div id="create" class="modal">
         <div class="modal-content">
             <h5 class="m-t-0">Ajouter un commentaire</h4>
             <div class="row">
@@ -53,9 +53,9 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">comment</i>
-                            <textarea id="content" name="content" class="materialize-textarea validate {{  formError.content is defined ? 'invalid' : '' }}" data-length="140">{{ formFields.content }}</textarea>
-                            {% if formError.content is defined %}
-                                <span class="helper-text" data-error="{{ formError.content }}"></span>
+                            <textarea id="content" name="content" class="materialize-textarea validate {{  formError.create.content is defined ? 'invalid' : '' }}" data-length="140">{{ formFields.create.content }}</textarea>
+                            {% if formError.create.content is defined %}
+                                <span class="helper-text" data-error="{{ formError.create.content }}"></span>
                             {% endif %}
                             <label for="content">Contenu</label>
                         </div>

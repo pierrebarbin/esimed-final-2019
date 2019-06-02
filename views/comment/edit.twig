@@ -1,0 +1,32 @@
+{% extends "../layouts/app.twig" %}
+
+{% block title %}Commentaire - Modification{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+     <div>
+        <h5>Modification du commentaire</h3>
+        <div class="divider m-b-20"></div>
+        <!-- Login Form -->
+         <div class="row">
+            <form action="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}" method="post" class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="material-icons prefix">assignment</i>
+                        <textarea id="content" name="content" class="materialize-textarea validate {{  formError.content is defined ? 'invalid' : '' }}" data-length="140">{{ formFields.content }}</textarea>
+                        {% if formError.content is defined %}
+                            <span class="helper-text" data-error="{{ formError.content }}"></span>
+                        {% endif %}
+                        <label for="content">Contenu</label>
+                    </div>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit">
+                    Modifier !
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

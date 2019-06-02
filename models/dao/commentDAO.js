@@ -47,6 +47,48 @@ module.exports = class CommentDAO extends DAO {
         });
     }
 
+    update(id,value,field){
+        let that = this;
+
+        return new Promise((resolve, reject) => {
+            this.db.run(`UPDATE ${this.table} SET ${field}=? WHERE id=?`,
+                [
+                    value,
+                    id
+                ],
+                function(err){
+                    if (err) {
+                        reject(err.message);
+                    }
+
+                    resolve();
+                });
+        });
+    }
+
+    findOneByUser(id,user_id){
+
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT * FROM ${this.table} WHERE id=? AND user_id=? LIMIT 1`,
+                [
+                    id,
+                    user_id
+                ],
+                function(err,challenge){
+                    if (err) {
+                        reject(err.message);
+                    }
+
+                    if(challenge.length === 0) {
+                        resolve(undefined);
+                    }
+                    else {
+                        resolve(challenge[0]);
+                    }
+                });
+        });
+    }
+
     findByChallenge(challenge_id){
         return new Promise((resolve, reject) => {
             this.db.all(`
