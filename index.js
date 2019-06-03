@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const passport = require('passport');
 const flash = require('connect-flash');
+const fileUpload = require('express-fileupload');
 const setting = require('./setting');
 
 /**
@@ -24,7 +25,8 @@ app.use(session({
 app.use(bodyParser.urlencoded({
     extended: true
   }));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(fileUpload());
 app.use(morgan('dev'));
 app.use(passport.initialize());
 app.use(passport.session());

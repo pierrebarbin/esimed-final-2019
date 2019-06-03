@@ -47,11 +47,11 @@ module.exports = (db) => {
         let error_redirect_path = 'account/edit';
 
         //Required pseudo
-        if(pseudo === ""){
+        if(pseudo === "" || !pseudo){
 
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{pseudo: 'Le pseudo est requis.'});
         //Required email
-        }else if(email === ""){
+        }else if(email === "" || !email){
 
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{email: 'L\'e-mail est requis.'});
         //Valid email
@@ -100,7 +100,7 @@ module.exports = (db) => {
 
         let error_redirect_path = 'account/password/change';
 
-        if(password === ""){
+        if(password === "" || !password){
 
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,{},{password: 'L\'ancien mot de passe est requis.'});
 
@@ -108,7 +108,7 @@ module.exports = (db) => {
 
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,{},{password: 'L\'ancien mot de passe est incorrect.'});
 
-        }else if(password_new === ""){
+        }else if(password_new === "" || !password_new){
 
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,{},{password_new: 'Le nouveau mot de passe est requis.'});
 

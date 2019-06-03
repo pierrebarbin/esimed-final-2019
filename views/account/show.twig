@@ -29,16 +29,22 @@
                         </div>
                     </div>
                 </li>#}
-                <li>
-                    <div class="collapsible-header">
+                <li class="{{ challenge.is_visible == 1 ? '' : 'grey lighten-2' }}">
+                    <div class="collapsible-header {{ challenge.is_visible == 1 ? '' : 'grey lighten-2' }}">
                         <div class="row">
                             <div class="col s10 truncate">
                                 {{ challenge.content }}
                             </div>
                             <div class="col s2">
-                                <a href="{{ url }}/challenge/edit/{{ challenge.id }}" class="secondary-content">
-                                    <i class="material-icons">edit</i>
-                                </a>
+                                {% if challenge.is_commented == 0 and challenge.is_liked == 0 %}
+                                    <form action="{{ url }}/challenge/delete/{{ challenge.id }}" method="post" class="icon-form">
+                                        <button type="submit"><i class="material-icons red-text">delete</i></button>
+                                    </form>
+                                {% else %}
+                                    <form action="{{ url }}/challenge/visibility/{{ challenge.is_visible == 1 ? 'hide' : 'show' }}/{{ challenge.id }}" method="post" class="icon-form">
+                                        <button type="submit"><i class="material-icons">{{ challenge.is_visible == 1 ? 'visibility_off' : 'visibility' }}</i></button>
+                                    </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

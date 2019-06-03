@@ -6,6 +6,7 @@ const regex = require(`${appRoot}/helpers/regex`);
 const redirectHelper = require(`${appRoot}/helpers/redirect`);
 const param = require(`${appRoot}/helpers/param`);
 const momentHelper = require(`${appRoot}/helpers/moment`);
+const validation = require(`${appRoot}/helpers/validation`);
 const moment = require('moment');
 
 const challenge = require('./challenge.js')(db);
@@ -28,6 +29,7 @@ module.exports = (app) => {
         req.regex = regex;
         req.redirectHelper = redirectHelper;
         req.momentHelper = momentHelper;
+        req.validation = validation;
         req.param = param;
         next();
     });

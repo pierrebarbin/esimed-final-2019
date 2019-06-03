@@ -38,6 +38,15 @@
                 {% if user.id == comment.user_id %}
                     <a href="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}" class="secondary-content" data-content=""><i class="material-icons">edit</i></a>
                 {% endif %}
+                <div class="m-t-10">
+                    {% if comment.type_media == 'image' %}
+                        <img class="responsive-img" src="{{ comment.media }}">
+                    {% elseif comment.type_media == 'video' %}
+                        <video class="responsive-video" controls>
+                            <source src="{{ comment.media }}" type="video/mp4">
+                        </video>
+                    {% endif %}
+                </div>
             </li>
         {% endfor %}
     </ul>
@@ -49,7 +58,7 @@
         <div class="modal-content">
             <h5 class="m-t-0">Ajouter un commentaire</h4>
             <div class="row">
-                <form action="{{ url }}/challenge/{{ challenge.id }}/comment/create" method="post" class="col s12">
+                <form action="{{ url }}/challenge/{{ challenge.id }}/comment/create" method="post" class="col s12" encType="multipart/form-data">
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">comment</i>
@@ -58,6 +67,33 @@
                                 <span class="helper-text" data-error="{{ formError.create.content }}"></span>
                             {% endif %}
                             <label for="content">Contenu</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <div class="switch">
+                                <label>
+                                    Ajouter une preuve?
+                                    <input type="checkbox" name="is_proof" value="1" {{ formFields.create.is_proof == 1 ? 'checked' : '' }}>
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            {% if formError.create.is_proof is defined %}
+                                <small class="red-text">{{ formError.create.is_proof }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="input-field col s12 {{ formFields.create.is_proof == 1 ? 'd-block' : 'd-none' }}  d-toggle">
+                            <span>Image ou vidéo</span>
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>Chercher</span>
+                                    <input type="file" name="media">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" >
+                                </div>
+                            </div>
+                            {% if formError.create.media is defined %}
+                                <small class="red-text">{{ formError.create.media }}</small>
+                            {% endif %}
                         </div>
                     </div>
                     <button class="btn waves-effect waves-light" type="submit">
@@ -123,6 +159,20 @@
             {% if formType is defined %}
                 $('#{{formType}}').modal('open');
             {% endif %}
+        });
+
+        let is_proof = document.querySelector('input[name="is_proof"]');
+        let toggle = document.querySelector('.d-toggle');
+
+        is_proof.addEventListener('click', function(){
+
+            if (is_proof.checked) {
+                toggle.classList.remove(['d-none']);
+                toggle.classList.add(['d-block']);
+            } else {
+                toggle.classList.remove(['d-block']);
+                toggle.classList.add(['d-none']);
+            }
         });
     </script>
 

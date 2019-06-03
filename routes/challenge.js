@@ -66,7 +66,7 @@ module.exports = (db) => {
 
         let inputs = {content: content};
 
-        if(content === ""){
+        if(content === "" || !content){
 
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
 
@@ -90,7 +90,7 @@ module.exports = (db) => {
         }
     });
 
-    router.get('/edit/:id',isOwnerChallenge, function (req,res) {
+    /*router.get('/edit/:id',isOwnerChallenge, function (req,res) {
 
         let id = req.params.id;
 
@@ -118,7 +118,7 @@ module.exports = (db) => {
 
         let inputs = {content: content};
 
-        if(content === ""){
+        if(content === "" || !content){
 
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
 
@@ -135,18 +135,90 @@ module.exports = (db) => {
             },()=>{})
 
         }
+    });*/
+
+    router.post('/delete/:id',isOwnerChallenge, function (req,res) {
+
+        let id = req.params.id;
+        let challengeObj = req.challengeObj;
+
+        let content = req.body.content;
+
+        let error_redirect_path = 'account';
+
+        if(challengeObj.is_liked > 0 || challengeObj.is_commented > 0){
+
+            req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Vous ne pouvez pas supprimer ce défi');
+
+        }else{
+
+            challenge.delete(id)
+            .then(()=>{
+
+                req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Défi supprimé avec succès');
+            },()=>{})
+
+        }
+    });
+
+    router.post('/visibility/hide/:id',isOwnerChallenge, function (req,res) {
+
+        let challengeObj = req.challengeObj;
+
+        let error_redirect_path = 'account';
+
+        if(challengeObj.is_commented > 0 || challengeObj.is_visible === 0 ){
+
+            req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Vous ne pouvez pas masquer ce défi');
+
+        }else{
+
+            challenge.visibility(challengeObj.id,0)
+            .then(()=>{
+
+                req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Défi masqué avec succès');
+            },()=>{})
+
+        }
+    });
+
+    router.post('/visibility/show/:id',isOwnerChallenge, function (req,res) {
+
+        let challengeObj = req.challengeObj;
+
+        let error_redirect_path = 'account';
+
+        if(challengeObj.is_commented > 0 || challengeObj.is_visible === 1 ){
+
+            req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Vous ne pouvez pas rendre visible ce défi');
+
+        }else{
+
+            challenge.visibility(challengeObj.id,1)
+            .then(()=>{
+
+                req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Défi rendu visible avec succès');
+            },()=>{})
+
+        }
     });
 
     router.post('/:id/comment/create',challengeExist, function (req,res) {
 
         let challengeObj = req.challengeObj;
+
         let content = req.body.content;
+        let is_proof = req.body.is_proof;
+        let files = req.files;
 
         let error_redirect_path = `challenge/show/${challengeObj.id}#create`;
 
-        let inputs = {create: {content: content}};
+        let inputs = {create: {
+            content: content,
+            is_proof: is_proof,
+        }};
 
-        if(content === ""){
+        if(content === "" || !content){
 
             req.flash('formType','create');
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{create: {content: 'Le contenu est requis.'}});
@@ -157,21 +229,72 @@ module.exports = (db) => {
 
         }else{
 
-            comment.insert({
-                content: content,
-                is_proof: 0,
-                media: null,
-                type_media: null,
-                is_accepted: 0,
-                user_id: req.user[0].id,
-                challenge_id: challengeObj.id,
-                created_at: req.moment().unix(),
-            })
-            .then(() => {
+            if(is_proof){
 
-                req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire ajouté avec succès');
+                if(is_proof != 1){
+                    req.flash('formType','create');
+                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{create: {is_proof: 'Une erreur est survenue, veuillez réessayer.'}});
 
-            },(err)=>{console.log(err)});
+                }else if (!files || !files.media) {
+
+                    req.flash('formType','create');
+                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{create: {media: 'Une image ou vidéo est requise.'}});
+
+                }else{
+
+                    let media = files.media;
+
+                    if(!req.validation.image(media.mimetype) && !req.validation.video(media.mimetype)){
+
+                        req.flash('formType','create');
+                        req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{create: {media: 'L\'image ou la vidéo n\'est pas sous un format accepté.'}});
+
+                    }else{
+
+                        let path = `${appRoot}/public/medias/${media.md5}.${ req.validation.getMimeFile(media.mimetype) }`;
+
+                        media.mv(path, function(err) {
+                            if (err){
+                                console.log(err);
+                                req.flash('formType','create');
+                                req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{create: {media: 'Une erreur est survenue lors du tranfert du média, veuillez réessayer.'}});
+                            }else{
+                                comment.insert({
+                                    content: content,
+                                    is_proof: 1,
+                                    media: `/static/medias/${media.md5}.${ req.validation.getMimeFile(media.mimetype)}`,
+                                    type_media: req.validation.getTypeFile(media.mimetype),
+                                    is_accepted: 0,
+                                    user_id: req.user[0].id,
+                                    challenge_id: challengeObj.id,
+                                    created_at: req.moment().unix(),
+                                })
+                                .then(() => {
+
+                                    req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire ajouté avec succès');
+
+                                },(err)=>{console.log(err)});
+                            }
+                          });
+                    }
+                }
+            }else{
+                comment.insert({
+                    content: content,
+                    is_proof: 0,
+                    media: null,
+                    type_media: null,
+                    is_accepted: 0,
+                    user_id: req.user[0].id,
+                    challenge_id: challengeObj.id,
+                    created_at: req.moment().unix(),
+                })
+                .then(() => {
+
+                    req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire ajouté avec succès');
+
+                },(err)=>{console.log(err)});
+            }
         }
     });
 
@@ -197,13 +320,19 @@ module.exports = (db) => {
 
         let challengeObj = req.challengeObj;
         let commentObj = req.commentObj;
+
         let content = req.body.content;
+        let is_proof = req.body.is_proof;
+        let files = req.files;
 
-        let error_redirect_path = `challenge/show/${challengeObj.id}#edit`;
+        let error_redirect_path = `challenge/${challengeObj.id}/comment/edit/${commentObj.id}`;
 
-        let inputs = {content: content};
+        let inputs = {
+            content: content,
+            is_proof: is_proof,
+        };
 
-        if(content === ""){
+        if(content === "" || !content){
 
             req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{content: 'Le contenu est requis.'});
 
@@ -213,14 +342,70 @@ module.exports = (db) => {
 
         }else{
 
-            comment.update(commentObj.id,content,'content')
-            .then(() => {
+            if(is_proof){
 
-                req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire modifié avec succès');
+                if(is_proof != 1){
 
-            },(err)=>{console.log(err)});
+                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {is_proof: 'Une erreur est survenue, veuillez réessayer.'});
+
+                }else if (!files || !files.media) {
+
+                    req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{media: 'Une image ou vidéo est requise.'});
+
+                }else{
+
+                    let media = files.media;
+
+                    if(!req.validation.image(media.mimetype) && !req.validation.video(media.mimetype)){
+
+                        req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs, {media: 'L\'image ou la vidéo n\'est pas sous un format accepté.'});
+
+                    }else{
+
+                        let path = `${appRoot}/public/medias/${media.md5}.${ req.validation.getMimeFile(media.mimetype) }`;
+
+                        media.mv(path, function(err) {
+                            if (err){
+                                console.log(err);
+                                req.redirectHelper.redirectWithInputs(req,res,error_redirect_path,inputs,{media: 'Une erreur est survenue lors du tranfert du média, veuillez réessayer.'});
+                            }else{
+                                comment.insert({
+                                    content: content,
+                                    is_proof: 1,
+                                    media: `/static/medias/${media.md5}.${ req.validation.getMimeFile(media.mimetype)}`,
+                                    type_media: req.validation.getTypeFile(media.mimetype),
+                                    is_accepted: 0,
+                                    user_id: req.user[0].id,
+                                    challenge_id: challengeObj.id,
+                                    created_at: req.moment().unix(),
+                                })
+                                .then(() => {
+
+                                    req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire ajouté avec succès');
+
+                                },(err)=>{console.log(err)});
+                            }
+                          });
+                    }
+                }
+            }else{
+                comment.insert({
+                    content: content,
+                    is_proof: 0,
+                    media: null,
+                    type_media: null,
+                    is_accepted: 0,
+                    user_id: req.user[0].id,
+                    challenge_id: challengeObj.id,
+                    created_at: req.moment().unix(),
+                })
+                .then(() => {
+
+                    req.redirectHelper.redirectWithToast(req,res,`challenge/show/${challengeObj.id}`,'Commentaire ajouté avec succès');
+
+                },(err)=>{console.log(err)});
+            }
         }
-    });
 
     return router;
 }

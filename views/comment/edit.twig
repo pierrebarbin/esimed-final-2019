@@ -20,6 +20,34 @@
                         {% endif %}
                         <label for="content">Contenu</label>
                     </div>
+                    <div class="input-field col s12">
+                        <div class="switch">
+                            <label>
+                                Ajouter une preuve?
+                                <input type="checkbox" name="is_proof" value="1" {{ formFields.is_proof == 1 ? 'checked' : '' }}>
+                                <span class="lever"></span>
+                            </label>
+                        </div>
+                        {% if formError.create.is_proof is defined %}
+                            <small class="red-text">{{ formError.is_proof }}</small>
+                        {% endif %}
+                        </div>
+                        <div class="input-field col s12 {{ formFields.is_proof == 1 ? 'd-block' : 'd-none' }}  d-toggle">
+                            <span>Image ou vidéo</span>
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>Chercher</span>
+                                    <input type="file" name="media">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" type="text" >
+                                </div>
+                            </div>
+                            {% if formError.media is defined %}
+                                <small class="red-text">{{ formError.media }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
                 <button class="btn waves-effect waves-light" type="submit">
                     Modifier !

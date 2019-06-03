@@ -40,11 +40,11 @@ module.exports = (db) => {
             email: email
         }
         //Required pseudo
-        if(pseudo === ""){
+        if(pseudo === "" || !pseudo){
 
             req.redirectHelper.redirectWithInputs(req,res,'register',inputs,{pseudo: 'Le pseudo est requis.'});
         //Required email
-        }else if(email === ""){
+        }else if(email === "" || !email){
 
             req.redirectHelper.redirectWithInputs(req,res,'register',inputs,{email: 'L\'e-mail est requis.'});
         //Valid email
@@ -64,7 +64,7 @@ module.exports = (db) => {
 
                     req.redirectHelper.redirectWithInputs(req,res,'register',inputs, {email: 'Cet e-mail est déjà utilisé.'});
                 //Required password
-                }else if(password === ""){
+                }else if(password === "" || !password){
 
                     req.redirectHelper.redirectWithInputs(req,res,'register',inputs, {password: 'Le mot de passe est requis.'});
                 //password and its confirmation doesn't match

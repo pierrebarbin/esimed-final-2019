@@ -26,6 +26,7 @@ module.exports = class Database {
                         id integer PRIMARY KEY AUTOINCREMENT,
                         content text NOT NULL,
                         is_realized integer DEFAULT 0,
+                        is_visible integer DEFAULT 1,
                         amount_like integer DEFAULT 0,
                         user_id integer NOT NULL,
                         created_at integer NOT NULL,
@@ -65,9 +66,11 @@ module.exports = class Database {
                     if(seeder){
                         userSeeder.seed((user) => {
                             challengeSeeder.seed((challenge) => {
-                                commentSeeder.seed((comment) => {
+                                if(challenge.id < 4){
+                                     commentSeeder.seed((comment) => {
 
-                                },db,user.id,challenge.id);
+                                    },db,user.id,challenge.id);
+                                }
                             },db,user.id);
                         },db);
 
