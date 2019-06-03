@@ -66,6 +66,33 @@ module.exports = class CommentDAO extends DAO {
         });
     }
 
+    updateProof(id,commentObj){
+        return new Promise((resolve, reject) => {
+            this.db.run(`UPDATE ${this.table}
+                SET
+                    content=?,
+                    is_proof=?,
+                    media=?,
+                    type_media=?
+                WHERE
+                    id=?`,
+                [
+                    commentObj.content,
+                    commentObj.is_proof,
+                    commentObj.media,
+                    commentObj.type_media,
+                    id
+                ],
+                function(err){
+                    if (err) {
+                        reject(err.message);
+                    }
+
+                    resolve();
+                });
+        });
+    }
+
     findOneByUser(id,user_id){
 
         return new Promise((resolve, reject) => {

@@ -39,6 +39,7 @@
                     <a href="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}" class="secondary-content" data-content=""><i class="material-icons">edit</i></a>
                 {% endif %}
                 <div class="m-t-10">
+                {% if comment.is_proof == 1 %}
                     {% if comment.type_media == 'image' %}
                         <img class="responsive-img" src="{{ comment.media }}">
                     {% elseif comment.type_media == 'video' %}
@@ -46,6 +47,7 @@
                             <source src="{{ comment.media }}" type="video/mp4">
                         </video>
                     {% endif %}
+                {% endif %}
                 </div>
             </li>
         {% endfor %}

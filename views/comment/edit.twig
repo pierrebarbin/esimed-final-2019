@@ -10,7 +10,7 @@
         <div class="divider m-b-20"></div>
         <!-- Login Form -->
          <div class="row">
-            <form action="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}" method="post" class="col s12">
+            <form action="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}" method="post" class="col s12" encType="multipart/form-data">
                 <div class="row">
                     <div class="input-field col s12">
                         <i class="material-icons prefix">assignment</i>
@@ -46,6 +46,14 @@
                             {% if formError.media is defined %}
                                 <small class="red-text">{{ formError.media }}</small>
                             {% endif %}
+
+                            {% if comment.type_media == 'image' %}
+                                <img class="responsive-img" src="{{ comment.media }}">
+                            {% elseif comment.type_media == 'video' %}
+                                <video class="responsive-video" controls>
+                                    <source src="{{ comment.media }}" type="video/mp4">
+                                </video>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -56,5 +64,26 @@
             </form>
         </div>
     </div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script>
+
+        let is_proof = document.querySelector('input[name="is_proof"]');
+        let toggle = document.querySelector('.d-toggle');
+
+        is_proof.addEventListener('click', function(){
+
+            if (is_proof.checked) {
+                toggle.classList.remove(['d-none']);
+                toggle.classList.add(['d-block']);
+            } else {
+                toggle.classList.remove(['d-block']);
+                toggle.classList.add(['d-none']);
+            }
+        });
+    </script>
 
 {% endblock %}
