@@ -63,10 +63,6 @@
     margin-bottom: 0px;
 }
 
-button.challenge-like{
-    margin-top:20px;
-}
-
 .icon-form button{
     background: transparent;
     border: none;
@@ -88,6 +84,10 @@ button.challenge-like{
     margin-right:10px;
 }
 
+.m-l-10{
+    margin-left:10px;
+}
+
 .m-t-10{
     margin-top:10px;
 }
@@ -99,6 +99,10 @@ button.challenge-like{
 }
 .m-b-20{
     margin-bottom:20px;
+}
+
+.m-b-50{
+    margin-bottom: 50px;
 }
 
 .w-100{
@@ -125,4 +129,31 @@ button.challenge-like{
 
 .d-block{
     display: block!important;
+}
+
+.pos-r{
+    position: relative;
+}
+
+.f-right{
+    float: right!important;
+}
+
+.fixed-tabs-wrapper{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.dropdown-content li a i{
+    height: inherit;
+    line-height: inherit;
+    float: left;
+    margin: 0 24px 0 0;
+    width: 24px;
+}
+
+.dropdown-content li a button{
+    color: #26a69a;
 }

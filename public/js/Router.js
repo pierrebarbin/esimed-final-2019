@@ -42,6 +42,23 @@ class Router {
     }
 
     /**
+     * return get param
+     * @param {string} key
+     */
+    queryStringKey(key){
+        var result = null,
+        tmp = [];
+        this.queryString()
+            .substr(1)
+            .split("&")
+            .forEach(function (item) {
+                tmp = item.split("=");
+                if (tmp[0] === key) result = decodeURIComponent(tmp[1]);
+            });
+        return result;
+    }
+
+    /**
      * Get pathname at given index
      * @param {integer} index
      */

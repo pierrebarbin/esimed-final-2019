@@ -3,6 +3,7 @@ const router = require('express').Router();
 const isOwnerChallenge = require(`${appRoot}/middlewares/IsOwnerChallenge`);
 const isOwnerComment = require(`${appRoot}/middlewares/IsOwnerComment`);
 const challengeExist = require(`${appRoot}/middlewares/ChallengeExist`);
+const commentExistForChallenge = require(`${appRoot}/middlewares/CommentExistForChallenge`);
 
 module.exports = (db) => {
 
@@ -199,6 +200,67 @@ module.exports = (db) => {
 
                 req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Défi rendu visible avec succès');
             },()=>{})
+
+        }
+    });
+
+    router.post('/:id/comment/:comment_id/accept',isOwnerChallenge,commentExistForChallenge, function (req,res) {
+
+        let challengeObj = req.challengeObj;
+        let commentObj = req.commentObj;
+
+        let error_redirect_path = `challenge/show/${challengeObj.id}?tab=proof`;
+
+        if(comment.is_accepted === 1 ){
+
+            req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Vous ne pouvez pas accepter cette preuve.');
+
+        }else{
+
+            comment.updateAccepted(commentObj.id,1)
+            .then(()=>{
+
+                challenge.updateRealized(challengeObj.id,1)
+                .then(()=>{
+
+                    req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Preuve accepté avec succès.');
+
+                },(err)=>{console.log(err)});
+            },(err)=>{console.log(err)});
+
+        }
+    });
+
+    router.post('/:id/comment/:comment_id/refute',isOwnerChallenge,commentExistForChallenge, function (req,res) {
+
+        let challengeObj = req.challengeObj;
+        let commentObj = req.commentObj;
+
+        let error_redirect_path = `challenge/show/${challengeObj.id}?tab=comment`;
+
+        if(comment.is_accepted === 0 ){
+
+            req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Vous ne pouvez pas réfuter cette preuve.');
+
+        }else{
+
+            comment.updateAccepted(commentObj.id,0)
+            .then(()=>{
+                //If there is still remainding accepted proofs for this challenge
+                if((challengeObj.nbr_accepted - 1) > 0){
+                     //We are not setting the challenge as not realized
+                     req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Preuve réfuté avec succès.');
+                }else{
+                    //There is no longer accepted proofs
+                    //The challenge is being set to not realized
+                    challenge.updateRealized(challengeObj.id,0)
+                    .then(()=>{
+
+                        req.redirectHelper.redirectWithToast(req,res,error_redirect_path,'Preuve réfuté avec succès.');
+
+                    },(err)=>{console.log(err)});
+                }
+            },(err)=>{console.log(err)});
 
         }
     });

@@ -99,6 +99,25 @@ module.exports = class ChallengeDAO extends DAO {
         });
     }
 
+    updateRealized(id,realized){
+        let that = this;
+
+        return new Promise((resolve, reject) => {
+            this.db.run(`UPDATE ${this.table} SET is_realized=? WHERE id=?`,
+                [
+                    realized,
+                    id
+                ],
+                function(err){
+                    if (err) {
+                        reject(err.message);
+                    }
+
+                    resolve();
+                });
+        });
+    }
+
     findById(id){
 
         return new Promise((resolve, reject) => {
@@ -154,7 +173,7 @@ module.exports = class ChallengeDAO extends DAO {
                     if (err) {
                         reject(err.message);
                     }else{
-                         if(challenge.length === 0) {
+                        if(challenge.length === 0) {
                             resolve(undefined);
                         }
                         else {
@@ -187,6 +206,15 @@ module.exports = class ChallengeDAO extends DAO {
                         AND
                         com.challenge_id=c.id
                     )as is_commented,
+                    (SELECT
+                        COUNT(*)
+                    FROM
+                        comments as com
+                    WHERE
+                        com.challenge_id=c.id
+                        AND
+                        com.is_accepted=1
+                    )as nbr_accepted,
                     c.id,
                     c.content,
                     c.is_realized,

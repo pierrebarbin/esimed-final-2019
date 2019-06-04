@@ -5,56 +5,213 @@
 {% block body %}
     {{ parent() }}
 
-    <h5><b>{{challenge.user_pseudo}}</b></h5>
-    <div class="divider"></div>
+    <div id="challenge-tab-overall" class="col s12">
 
-    <button class="btn-small waves-effect waves-light challenge-like {{ challenge.is_liked > 0 ? 'cyan' : 'black' }}" data-id="{{ challenge.id }}">
-        <span class="valign-wrapper">
-            <i class="material-icons  white-text">thumb_up</i>
-            <span class="amount-like white-text m-l-5">{{ challenge.amount_like }}</span>
-        </span>
-    </button>
+        <h5><b>{{challenge.user_pseudo}}</b></h5>
+        <div class="divider"></div>
 
-    <div class="m-t-20">
-        <p>{{ challenge.content }}</p>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="w-100">
-        <h6 class="d-inline-block"><b>Commentaires</b></h6>
-        <a href="#create" class="waves-effect waves-light right m-t-10 m-r-10 modal-trigger" title="Ajouter un commentaire"><i class="material-icons small">add_comment</i></a>
-    </div>
-    <div class="clearfix"></div>
-     <ul class="collection">
-        {% for comment in comments %}
-            <li class="collection-item avatar">
-                <i class="material-icons circle">person</i>
-                <span class="title">{{ comment.user_pseudo }}</span>
-                <small class="grey-text">{{ comment.created_at }}</small>
-                <p>
-                    {{ comment.content }}
-                </p>
-                {% if user.id == comment.user_id %}
-                    <a href="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}" class="secondary-content" data-content=""><i class="material-icons">edit</i></a>
-                {% endif %}
-                <div class="m-t-10">
-                {% if comment.is_proof == 1 %}
-                    {% if comment.type_media == 'image' %}
-                        <img class="responsive-img" src="{{ comment.media }}">
-                    {% elseif comment.type_media == 'video' %}
-                        <video class="responsive-video" controls>
-                            <source src="{{ comment.media }}" type="video/mp4">
-                        </video>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <button class="btn-small waves-effect waves-light {{ challenge.is_liked > 0 ? 'cyan' : 'black' }}" data-id="{{ challenge.id }}">
+                            <span class="valign-wrapper">
+                                <i class="material-icons  white-text">thumb_up</i>
+                                <span class="amount-like white-text m-l-5">{{ challenge.amount_like }}</span>
+                            </span>
+                        </button>
+                    </td>
+                    {% if challenge.is_realized == 1 %}
+                        <td>
+                            <i class="material-icons small green-text f-right">beenhere</i>
+                        </td>
                     {% endif %}
-                {% endif %}
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="m-t-20">
+            <blockquote>{{ challenge.content }}</blockquote>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="w-100">
+            <h6 class="d-inline-block"><b>Mes commentaires</b></h6>
+            <a href="#create" class="waves-effect waves-light right m-t-10 m-r-10 modal-trigger" title="Ajouter un commentaire"><i class="material-icons small">add_comment</i></a>
+        </div>
+        <div class="clearfix"></div>
+        <ul class="collection z-depth-3 m-b-50">
+            {% for comment in comments if user.id == comment.user_id %}
+                <li class="collection-item avatar">
+                    <i class="material-icons circle">person</i>
+                    <span class="title">{{ comment.user_pseudo }}</span>
+                    <small class="grey-text">{{ comment.created_at }}</small>
+                    <p>
+                        {{ comment.content }}
+                    </p>
+                    {% if user.id == comment.user_id or (challenge.user_id == user.id and comment.is_accepted == 1)  %}
+                        <a href="#" class="secondary-content dropdown-trigger" data-target='dropdownCommentPersonal{{ loop.index }}'><i class="material-icons">more_vert</i></a>
+                    {% endif %}
+                    <div class="m-t-10">
+                    {% if comment.is_proof == 1 %}
+                        {% if comment.type_media == 'image' %}
+                            <img class="responsive-img" src="{{ comment.media }}">
+                        {% elseif comment.type_media == 'video' %}
+                            <video class="responsive-video" controls>
+                                <source src="{{ comment.media }}" type="video/mp4">
+                            </video>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                </li>
+                <ul id='dropdownCommentPersonal{{ loop.index }}' class='dropdown-content'>
+                    <li>
+                        {% if user.id == comment.user_id %}
+                            <a href="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}">
+                                <i class="material-icons">edit</i>
+                                Editer
+                            </a>
+                            <li class="divider" tabindex="-1"></li>
+                        {% endif %}
+                        {% if challenge.user_id == user.id and comment.is_accepted == 1 %}
+                            <a href="#!">
+                                <form action="{{ url }}/challenge/{{ challenge.id }}/comment/{{ comment.id }}/refute" method="post" class="icon-form d-inline-block">
+                                    <button type="submit" class="valign-wrapper">
+                                        <i class="material-icons">clear</i>
+                                        REFUTER
+                                    </button>
+                                </form>
+                            </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            {% else %}
+                <div class="m-t-20 m-b-20 m-l-10">
+                    <blockquote>Aucun commentaire posté</blockquote>
                 </div>
-            </li>
-        {% endfor %}
-    </ul>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div id="challenge-tab-comment" class="col s12">
+        <div class="w-100">
+            <h5 class="d-inline-block"><b>Commentaires</b></h5>
+            <a href="#create" class="waves-effect waves-light right m-t-10 m-r-10 modal-trigger" title="Ajouter un commentaire"><i class="material-icons small">add_comment</i></a>
+        </div>
+        <div class="divider"></div>
+        <ul class="collection m-t-20 z-depth-3 m-b-50">
+            {% for comment in comments %}
+                <li class="collection-item avatar">
+                    <i class="material-icons circle">person</i>
+                    <span class="title">{{ comment.user_pseudo }}</span>
+                    <small class="grey-text">{{ comment.created_at }}</small>
+                    <p>
+                        {{ comment.content }}
+                    </p>
+                    {% if user.id == comment.user_id or (challenge.user_id == user.id and comment.is_accepted == 1)  %}
+                        <a href="#" class="secondary-content dropdown-trigger" data-target='dropdownComment{{ loop.index }}'><i class="material-icons">more_vert</i></a>
+                    {% endif %}
+                    <div class="m-t-10">
+                    {% if comment.is_proof == 1 %}
+                        {% if comment.type_media == 'image' %}
+                            <img class="responsive-img" src="{{ comment.media }}">
+                        {% elseif comment.type_media == 'video' %}
+                            <video class="responsive-video" controls>
+                                <source src="{{ comment.media }}" type="video/mp4">
+                            </video>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                </li>
+                <ul id='dropdownComment{{ loop.index }}' class='dropdown-content'>
+                    <li>
+                        {% if user.id == comment.user_id %}
+                            <a href="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}">
+                                <i class="material-icons">edit</i>
+                                Editer
+                            </a>
+                            <li class="divider" tabindex="-1"></li>
+                        {% endif %}
+                        {% if challenge.user_id == user.id and comment.is_accepted == 1 %}
+                            <a href="#!">
+                                <form action="{{ url }}/challenge/{{ challenge.id }}/comment/{{ comment.id }}/refute" method="post" class="icon-form d-inline-block">
+                                    <button type="submit" class="valign-wrapper">
+                                        <i class="material-icons">clear</i>
+                                        REFUTER
+                                    </button>
+                                </form>
+                            </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            {% else %}
+                <div class="m-t-20 m-b-20 m-l-10">
+                    <blockquote>Aucun commentaire posté</blockquote>
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if challenge.user_id == user.id %}
+        <div id="challenge-tab-proof" class="col s12">
+            <h5><b>Preuves</b></h5>
+            <div class="divider"></div>
+            <ul class="collection m-t-20 z-depth-3 m-b-50">
+                {% for comment in comments if comment.is_proof == 1 and comment.is_accepted == 0 %}
+                    <li class="collection-item avatar">
+                        <i class="material-icons circle">person</i>
+                        <span class="title">{{ comment.user_pseudo }}</span>
+                        <small class="grey-text">{{ comment.created_at }}</small>
+                        <p>
+                            {{ comment.content }}
+                        </p>
+                        <a href="#" class="secondary-content dropdown-trigger" data-target='dropdownProof{{ loop.index }}'><i class="material-icons">more_vert</i></a>
+                        <div class="m-t-10">
+                            {% if comment.is_proof == 1 %}
+                                {% if comment.type_media == 'image' %}
+                                    <img class="responsive-img" src="{{ comment.media }}">
+                                {% elseif comment.type_media == 'video' %}
+                                    <video class="responsive-video" controls>
+                                        <source src="{{ comment.media }}" type="video/mp4">
+                                    </video>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </li>
+                    <ul id='dropdownProof{{ loop.index }}' class='dropdown-content'>
+                        <li>
+                            <a href="#!">
+                                <form action="{{ url }}/challenge/{{ challenge.id }}/comment/{{ comment.id }}/accept" method="post" class="icon-form d-inline-block">
+                                    <button type="submit" class="valign-wrapper">
+                                        <i class="material-icons">checked_circle_outline</i>
+                                        ACCEPTER
+                                    </button>
+                                </form>
+                            </a>
+                        </li>
+                    </ul>
+                {% else %}
+                    <div class="m-t-20 m-b-20 m-l-10">
+                        <blockquote>Aucune preuve postée</blockquote>
+                    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block end_html %}
+
+    <div class="fixed-tabs-wrapper">
+        <ul id="challenge-tab" class="tabs">
+            <li class="tab col s6"><a class="active" href="#challenge-tab-overall"><i class="material-icons prefix">language</i></a></li>
+            <li class="tab col s6"><a href="#challenge-tab-comment"><i class="material-icons">comment</i></a></li>
+            {% if challenge.user_id == user.id %}
+                <li class="tab col s6"><a href="#challenge-tab-proof"><i class="material-icons">flag</i></a></li>
+            {% endif %}
+        </ul>
+    </div>
 
     <div id="create" class="modal">
         <div class="modal-content">
@@ -111,11 +268,21 @@
 
 {% block javascript %}
     {{ parent() }}
+    <script src="/static/js/Router.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
             let wordcounters = document.querySelectorAll('.materialize-textarea');
             let wordcountersInstances = M.CharacterCounter.init(wordcounters, {});
+
+            let tab = document.querySelector('#challenge-tab');
+            let tabinstance = M.Tabs.init(tab, {});
+
+            let router = new Router();
+
+            if(router.queryStringKey('tab') !== null){
+                tabinstance.select(`challenge-tab-${router.queryStringKey('tab')}`);
+            }
 
             let likes = document.querySelectorAll('.challenge-like');
 

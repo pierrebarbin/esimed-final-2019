@@ -93,6 +93,25 @@ module.exports = class CommentDAO extends DAO {
         });
     }
 
+    updateAccepted(id,accpeted){
+        let that = this;
+
+        return new Promise((resolve, reject) => {
+            this.db.run(`UPDATE ${this.table} SET is_accepted=? WHERE id=?`,
+                [
+                    accpeted,
+                    id
+                ],
+                function(err){
+                    if (err) {
+                        reject(err.message);
+                    }
+
+                    resolve();
+                });
+        });
+    }
+
     findOneByUser(id,user_id){
 
         return new Promise((resolve, reject) => {
@@ -147,6 +166,50 @@ module.exports = class CommentDAO extends DAO {
                 }
 
                 resolve(comments);
+            });
+        });
+    }
+
+    findOneByChallenge(id,challenge_id){
+        return new Promise((resolve, reject) => {
+            this.db.all(`
+            SELECT
+                c.id,
+                c.content,
+                c.is_proof,
+                c.created_at,
+                c.media,
+                c.type_media,
+                c.is_accepted,
+                u.id as user_id,
+                u.pseudo as user_pseudo
+            FROM
+                ${this.table} as c
+            LEFT JOIN
+                users as u ON c.user_id=u.id
+            WHERE
+                c.challenge_id=?
+                AND
+                c.id=?
+            ORDER BY
+                c.created_at DESC
+            LIMIT 1`,
+            [
+                challenge_id,
+                id
+            ],
+            (err, comment) => {
+
+                if(err){
+                    reject(err);
+                }else{
+                    if(comment.length === 0) {
+                        resolve(undefined);
+                    }
+                    else {
+                        resolve(comment[0]);
+                    }
+                }
             });
         });
     }

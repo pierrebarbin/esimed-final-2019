@@ -47,7 +47,9 @@
                 let sidenavsInstances = M.Sidenav.init(sidenavs, {});
 
                 let dropdowns = document.querySelectorAll('.dropdown-trigger');
-                let dropdownsInstances = M.Dropdown.init(dropdowns, {});
+                let dropdownsInstances = M.Dropdown.init(dropdowns, {
+                    constrainWidth: false,
+                });
             });
         </script>
         {% block javascript %}{% endblock %}
