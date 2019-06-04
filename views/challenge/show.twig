@@ -14,7 +14,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <button class="btn-small waves-effect waves-light {{ challenge.is_liked > 0 ? 'cyan' : 'black' }}" data-id="{{ challenge.id }}">
+                        <button class="btn-small waves-effect waves-light challenge-like {{ challenge.is_liked > 0 ? 'cyan' : 'black' }}" data-id="{{ challenge.id }}">
                             <span class="valign-wrapper">
                                 <i class="material-icons  white-text">thumb_up</i>
                                 <span class="amount-like white-text m-l-5">{{ challenge.amount_like }}</span>

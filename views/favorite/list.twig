@@ -1,23 +1,6 @@
 {% extends "../layouts/app.twig" %}
 
-{% block title %}Défis{% endblock %}
-
-{% block nav_dropdown %}
-    <ul class="right">
-        <li>
-            <a href="#!" class="dropdown-trigger" data-target="nav-dropdown">
-                <i class="material-icons">
-                    filter_list
-                </i>
-            </a>
-        </li>
-    </ul>
-    <ul id="nav-dropdown" class="dropdown-content">
-        <li><a class="filter" href="#!" data-href="?">Récent</a></li>
-        <li><a class="filter" href="#!" data-href="?realized=true">Réalisé</a></li>
-        <li><a class="filter" href="#!" data-href="?popularity=true">Popularité</a></li>
-    </ul>
-{% endblock %}
+{% block title %}Favoris{% endblock %}
 
 {% block body %}
     {{ parent() }}
@@ -58,42 +41,11 @@
 
         {% endfor %}
 
-         <div class="fixed-action-btn">
-            <a href="{{ url }}/challenge/create" class="btn-floating btn-large cyan waves-effect waves-light">
-                <i class="large material-icons">add</i>
-            </a>
-        </div>
-    </div>
-
 {% endblock %}
 
 {% block javascript %}
     {{ parent() }}
     <script src="/static/js/Router.js"></script>
-    <script>
-        let router = new Router();
-
-        if(router.queyStringStorageKeyExists()){
-            router.getStorageQueryString();
-        }
-
-        router.persistCurrentQueryString();
-
-        let filters = document.querySelectorAll('.filter');
-
-         for(var i = 0; i < filters.length; i++) {
-            filters[i].addEventListener('click', function() {
-
-                let data = this.getAttribute('data-href');
-
-                router.removeStorageQueryString();
-
-                let location = `${router.fullUrl()}${data}`;
-
-                router.redirect({location:location});
-            });
-        }
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 

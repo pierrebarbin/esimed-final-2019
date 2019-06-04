@@ -20,20 +20,26 @@
     {{ parent() }}
     <li>
         <a href="{{ url }}/challenge">
-            Défis
             <i class="material-icons">assignment</i>
+            Défis
+        </a>
+    </li>
+    <li>
+        <a href="{{ url }}/favorite">
+            <i class="material-icons">star</i>
+            Favoris
         </a>
     </li>
     <li>
         <a href="{{ url }}/account">
-            Mon compte
             <i class="material-icons">account_circle</i>
+            Mon compte
         </a>
     </li>
     <li>
         <a href="{{ url }}/logout">
-            Déconnexion
             <i class="material-icons">power_settings_new</i>
+            Déconnexion
         </a>
     </li>
 {% endblock %}

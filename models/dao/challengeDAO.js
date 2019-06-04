@@ -153,6 +153,15 @@ module.exports = class ChallengeDAO extends DAO {
                         AND
                         l.challenge_id=c.id
                     )as is_liked,
+                    (SELECT
+                        COUNT(*)
+                    FROM
+                        challenge_followed as f
+                    WHERE
+                        f.user_id=?
+                        AND
+                        f.challenge_id=c.id
+                    )as is_fav,
                     c.id,
                     c.content,
                     c.is_realized,
@@ -166,6 +175,7 @@ module.exports = class ChallengeDAO extends DAO {
                     users as u ON c.user_id = u.id
                 WHERE ${this.globalWhere} AND c.id=? LIMIT 1`,
                 [
+                    user_id,
                     user_id,
                     id
                 ],
@@ -326,6 +336,15 @@ module.exports = class ChallengeDAO extends DAO {
                     AND
                     l.challenge_id=c.id
                 )as is_liked,
+                (SELECT
+                    COUNT(*)
+                FROM
+                    challenge_followed as f
+                WHERE
+                    f.user_id=?
+                    AND
+                    f.challenge_id=c.id
+                )as is_fav,
                 c.id,
                 c.content,
                 c.is_realized,
@@ -340,6 +359,7 @@ module.exports = class ChallengeDAO extends DAO {
             ${where} AND ${this.globalWhere}
             ${orderby}`,
             [
+                user.id,
                 user.id
             ],
             (err, challenges) => {
