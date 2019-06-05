@@ -144,6 +144,35 @@ module.exports = class UserDAO extends DAO {
         });
     }
 
+    findByIdWithDetails(user_id){
+        return new Promise((resolve, reject) => {
+            this.db.all(`
+            SELECT
+                u.id,
+                u.pseudo
+            FROM
+                ${this.table} as u
+            WHERE
+                u.id=?
+            LIMIT 1`,
+            [
+                user_id
+            ],
+            (err, users) => {
+                if (err) {
+                    reject(err.message);
+                }else{
+                    if(users.length === 0) {
+                        resolve(undefined);
+                    }
+                    else {
+                        resolve(users[0]);
+                    }
+                }
+            });
+        });
+    }
+
     findAll(){
         return new Promise((resolve, reject) => {
             this.db.all(`SELECT * FROM ${this.table}`,

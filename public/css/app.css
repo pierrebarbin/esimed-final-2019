@@ -1,72 +1,145 @@
-.card-challenge .challenge-realized{
-    position: absolute;
-    top:-4px;
-    right:6px;
+/*
+* ---------------------------------
+* VARIABLES
+* ---------------------------------
+*/
+
+:root{
+    --main-color: #557A95;
+    --secondary-color: #7395AE;
+    --dark-color: #5D5C61;
+    --light-color: #938E94;
+    --third-color: #B1A296;
 }
 
-.card-challenge .card-content .valign-wrapper{
-    margin-bottom: 10px;
+/*:root{
+    --main-color: #4F1B1D;
+    --secondary-color: #83687B;
+    --dark-color: #4F1B1D;
+    --light-color: #83687B;
+    --third-color: #ADADAD;
+}*/
+
+/*
+* ---------------------------------
+* MATERIALIZE OVERIDE
+* ---------------------------------
+*/
+
+nav{
+    background-color: var(--main-color);
+}
+label{
+    color: var(--light-color);
 }
 
-.card-challenge .waves-effect{
-    display:block;
-    color:black;
+nav i.material-icons,button i.material-icons{
+    color: #F1F1F1;
 }
 
-.card-challenge .valign-wrapper > small{
-    margin-left: auto;
+.tabs{
+    background-color: var(--secondary-color);
 }
 
-.card-challenge .challenge-pseudo{
-
-    display: inline-block;
-    font-size: 1.15rem;
+.tabs i {
+    color: #FFFFFF;
 }
 
-.card-challenge .card-action {
-
-    padding: 6px 24px;
+.light-text{
+    color: var(--light-color)!important;
 }
 
-.card-challenge .card-action > div {
-
-    display: inline-block;
+.light{
+    background-color: var(--light-color);
 }
 
-.card-challenge .card-action > div:last-child {
-
-    margin-left: auto;
+.main{
+    background-color: var(--main-color);
 }
 
-.card-challenge .card-action .valign-wrapper > span {
-
-    display: inline-block;
-    margin: 0px 3px;
+.main-text{
+    color: var(--main-color);
 }
 
-.challenge-personal{
-    margin-top: 20px;
+.secondary-text{
+    color: var(--secondary-color);
 }
 
-.challenge-personal .collapsible{
-    margin: 0px;
-    border-top:none;
-    border-right:none;
-    border-left:none;
+.secondary{
+    background-color: var(--secondary-color);
 }
 
-.challenge-personal .collapsible-header{
-    display:block;
+.third{
+    background-color: var(--third-color);
 }
 
-.challenge-personal .row{
-    margin-bottom: 0px;
+.third-text{
+    color: var(--third-color);
 }
 
-.icon-form button{
-    background: transparent;
-    border: none;
+i{
+    color: var(--light-color);
 }
+
+a{
+    color: var(--secondary-color);
+}
+
+blockquote{
+    border-left: 5px solid var(--main-color);
+}
+
+.dropdown-content li>a{
+    color: var(--secondary-color);
+}
+
+.btn{
+    background-color: var(--main-color);
+}
+
+.btn:focus, .btn-large:focus, .btn-small:focus, .btn-floating:focus {
+    background-color: var(--dark-color);
+}
+
+.btn:hover, .btn-large:hover, .btn-small:hover {
+    background-color: var(--secondary-color);
+}
+
+.input-field .prefix.active {
+    color: var(--secondary-color);
+}
+
+.switch label input[type=checkbox]:checked+.lever{
+    background-color: var(--light-color);
+}
+
+.switch label input[type=checkbox]:checked+.lever:after{
+    background-color: var(--secondary-color);
+}
+
+input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-default):focus:not([readonly])+label, input[type=password]:not(.browser-default):focus:not([readonly])+label, input[type=email]:not(.browser-default):focus:not([readonly])+label, input[type=url]:not(.browser-default):focus:not([readonly])+label, input[type=time]:not(.browser-default):focus:not([readonly])+label, input[type=date]:not(.browser-default):focus:not([readonly])+label, input[type=datetime]:not(.browser-default):focus:not([readonly])+label, input[type=datetime-local]:not(.browser-default):focus:not([readonly])+label, input[type=tel]:not(.browser-default):focus:not([readonly])+label, input[type=number]:not(.browser-default):focus:not([readonly])+label, input[type=search]:not(.browser-default):focus:not([readonly])+label, textarea.materialize-textarea:focus:not([readonly])+label{
+    color: var(--secondary-color);
+}
+
+input:not([type]).valid ~ label, input[type=text]:not(.browser-default).valid ~ label, input[type=password]:not(.browser-default).valid ~ label, input[type=email]:not(.browser-default).valid ~ label, input[type=url]:not(.browser-default).valid ~ label, input[type=time]:not(.browser-default).valid ~ label, input[type=date]:not(.browser-default).valid ~ label, input[type=datetime]:not(.browser-default).valid ~ label, input[type=datetime-local]:not(.browser-default).valid ~ label, input[type=tel]:not(.browser-default).valid ~ label, input[type=number]:not(.browser-default).valid ~ label, input[type=search]:not(.browser-default).valid ~ label, textarea.materialize-textarea.valid ~ label{
+    color: #4CAF50;
+}
+
+input:not([type]).invalid ~ label, input[type=text]:not(.browser-default).invalid ~ label, input[type=password]:not(.browser-default).invalid ~ label, input[type=email]:not(.browser-default).invalid ~ label, input[type=url]:not(.browser-default).invalid ~ label, input[type=time]:not(.browser-default).invalid ~ label, input[type=date]:not(.browser-default).invalid ~ label, input[type=datetime]:not(.browser-default).invalid ~ label, input[type=datetime-local]:not(.browser-default).invalid ~ label, input[type=tel]:not(.browser-default).invalid ~ label, input[type=number]:not(.browser-default).invalid ~ label, input[type=search]:not(.browser-default).invalid ~ label, textarea.materialize-textarea.invalid ~ label{
+    color: #F44336;
+}
+
+input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]){
+    border-bottom: 1px solid var(--secondary-color);
+    -webkit-box-shadow: 0 1px 0 0 var(--secondary-color);
+    box-shadow: 0 1px 0 0 var(--secondary-color);
+}
+
+/*
+* ---------------------------------
+* HELPERS
+* ---------------------------------
+*/
 
 .m-t-0{
     margin-top:0px!important;
@@ -137,6 +210,88 @@
 
 .f-right{
     float: right!important;
+}
+
+/*
+* ---------------------------------
+* CUSTOM CSS
+* ---------------------------------
+*/
+
+.card-challenge .challenge-realized{
+    position: absolute;
+    top:-4px;
+    right:6px;
+}
+
+.card-challenge .card-content .valign-wrapper{
+    margin-bottom: 10px;
+}
+
+.card-challenge .waves-effect{
+    display:block;
+    color:black;
+}
+
+.card-challenge .valign-wrapper > small{
+    margin-left: auto;
+}
+
+.card-challenge .challenge-pseudo{
+
+    display: inline-block;
+    font-size: 1.15rem;
+}
+
+.card-challenge .card-action {
+
+    padding: 6px 24px;
+}
+
+.card-challenge .card-action > div {
+
+    display: inline-block;
+}
+
+.card-challenge .card-action > div:last-child {
+
+    margin-left: auto;
+}
+
+.card-challenge .card-action .valign-wrapper > span {
+
+    display: inline-block;
+    margin: 0px 3px;
+}
+
+.challenge-personal{
+    margin-top: 20px;
+    border: none;
+}
+
+.challenge-personal .collection-header{
+
+    margin-bottom: 10px;
+}
+
+.challenge-personal .collapsible{
+    margin: 0px;
+    border-top:none;
+    border-right:none;
+    border-left:none;
+}
+
+.challenge-personal .collapsible-header{
+    display:block;
+}
+
+.challenge-personal .row{
+    margin-bottom: 0px;
+}
+
+.icon-form button{
+    background: transparent;
+    border: none;
 }
 
 .fixed-tabs-wrapper{

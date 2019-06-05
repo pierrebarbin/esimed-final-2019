@@ -10,7 +10,7 @@ module.exports = (db) => {
 
     router.get('/', function (req,res) {
 
-        challenge.findByUser(req.user[0].id)
+        challenge.findByUser(req.user[0].id,req.user[0].id)
         .then((challenges)=>{
 
             req.param.addParams({

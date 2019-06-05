@@ -17,26 +17,28 @@ module.exports = function(db){
     });
 
     passport.use('local',new LocalStrategy({
-        passReqToCallback : true
+            passReqToCallback : true
         },
         function(req,username, password, done) {
             User.findOne({ email: username }, function(err, user) {
 
-            if (err) { return done(err); }
+                if (err) {
+                    return done(err);
+                }else if (!user) {
 
-            if (!user) {
-                console.log('Incorrect username');
-                return done(null, false, { message: 'Identifiant incorrect.' });
-            }
+                    console.log('Incorrect username');
+                    return done(null, false, { message: 'Identifiant incorrect.' });
 
-            if (!user.validPassword(password)) {
-                console.log('Incorrect password');
-                return done(null, false, { message: 'Mot de passe incorrect.' });
-            }
+                }else if (!user.validPassword(password)) {
 
-            console.log('All good my friend!');
+                    console.log('Incorrect password');
+                    return done(null, false, { message: 'Mot de passe incorrect.' });
 
-                return done(null, user);
+                }else{
+                    console.log('All good my friend!');
+
+                    return done(null, user);
+                }
             });
         }
     ));

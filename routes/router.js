@@ -13,6 +13,9 @@ const challenge = require('./challenge.js')(db);
 const account = require('./account.js')(db);
 const like = require('./like.js')(db);
 const fav = require('./favorite.js')(db);
+const profile = require('./profile.js')(db);
+const config = require('./config.js')(db);
+
 
 module.exports = (app) => {
 
@@ -56,6 +59,8 @@ module.exports = (app) => {
     app.use('/challenge', challenge);
     app.use('/like', like);
     app.use('/favorite', fav);
+    app.use('/profile', profile);
+    app.use('/config', config);
 
     app.get(`/logout`, (req, res) => {
         req.logout();

@@ -259,7 +259,7 @@ module.exports = class ChallengeDAO extends DAO {
     }
 
 
-    findByUser(user_id){
+    findByUser(user_id,current_user_id,globalWhere = false){
 
         return new Promise((resolve, reject) => {
             this.db.all(`SELECT
@@ -292,10 +292,10 @@ module.exports = class ChallengeDAO extends DAO {
                 FROM ${this.table} as c
                 LEFT JOIN
                     users as u ON c.user_id = u.id
-                WHERE user_id=?`,
+                WHERE ${ globalWhere ? this.globalWhere + ' AND ' : '' } user_id=?`,
                 [
-                    user_id,
-                    user_id,
+                    current_user_id,
+                    current_user_id,
                     user_id
                 ],
                 (err, challenges) => {
@@ -309,6 +309,62 @@ module.exports = class ChallengeDAO extends DAO {
         });
     }
 
+    findRealizedChallengesByUser(user_id,current_user_id){
+
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT
+                (SELECT
+                        COUNT(*)
+                    FROM
+                        likes as l
+                    WHERE
+                        l.user_id=?
+                        AND
+                        l.challenge_id=c.id
+                    )as is_liked,
+                    (SELECT
+                        COUNT(*)
+                    FROM
+                        comments as com
+                    WHERE
+                        com.user_id=?
+                        AND
+                        com.challenge_id=c.id
+                    )as is_commented,
+                    c.id,
+                    c.content,
+                    c.is_realized,
+                    c.is_visible,
+                    c.amount_like,
+                    c.created_at,
+                    u.id as user_id,
+                    u.pseudo as user_pseudo
+                FROM ${this.table} as c
+                LEFT JOIN
+                    users as u ON c.user_id = u.id
+                LEFT JOIN
+                    comments as com ON c.id = com.challenge_id
+                WHERE
+                    com.is_accepted=1
+                    AND
+                    com.user_id=?
+                    AND
+                    ${this.globalWhere}`,
+                [
+                    current_user_id,
+                    current_user_id,
+                    user_id
+                ],
+                (err, challenges) => {
+
+                    if(err){
+                        reject(err);
+                    }
+
+                    resolve(challenges);
+                });
+        });
+    }
 
     findAll(user,realized = false,popularity = false){
 

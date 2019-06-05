@@ -41,7 +41,7 @@
                         {% if challenge.is_visible == 1 %}
                             <div class="d-inline-block">
                                 <a href="{{ url }}/challenge/show/{{ challenge.id }}?tab=comment">
-                                    <i class="material-icons">comment</i>
+                                    <i class="material-icons secondary-text">comment</i>
                                     <span class="badge">COMMENTAIRES</span>
                                 </a>
                             </div>
@@ -56,7 +56,7 @@
                         {% else %}
                             <form action="{{ url }}/challenge/visibility/{{ challenge.is_visible == 1 ? 'hide' : 'show' }}/{{ challenge.id }}" method="post" class="icon-form d-inline-block">
                                 <button type="submit">
-                                    <i class="material-icons">{{ challenge.is_visible == 1 ? 'visibility_off' : 'visibility' }}</i>
+                                    <i class="material-icons light-text">{{ challenge.is_visible == 1 ? 'visibility_off' : 'visibility' }}</i>
                                     <span class="badge">{{ challenge.is_visible == 1 ? 'CACHER' : 'AFFICHER' }}</span>
                                 </button>
                             </form>
@@ -68,12 +68,12 @@
     </ul>
 
     <div class="fixed-action-btn">
-        <a class="btn-floating btn-large cyan">
+        <a class="btn-floating btn-large secondary">
             <i class="large material-icons">settings</i>
         </a>
         <ul>
-            <li><a href="{{ url }}/account/password/change" class="btn-floating green"><i class="material-icons">lock</i></a></li>
-            <li><a href="{{ url }}/account/edit" class="btn-floating blue"><i class="material-icons">mode_edit</i></a></li>
+            <li><a href="{{ url }}/account/password/change" class="btn-floating light"><i class="material-icons">lock</i></a></li>
+            <li><a href="{{ url }}/account/edit" class="btn-floating main"><i class="material-icons">mode_edit</i></a></li>
         </ul>
     </div>
 

@@ -41,10 +41,16 @@ module.exports = class FavoriteDAO extends DAO {
             FROM challenges as c
             LEFT JOIN
                 users as u ON c.user_id = u.id
-            LEFT JOIN
-                    ${this.table} as f ON f.challenge_id = c.id
             WHERE
-                is_visible = 1 AND f.user_id=?`,
+                is_visible = 1 AND c.id IN (
+                    SELECT
+                        fav.challenge_id
+                    FROM
+                        ${this.table} as fav
+                    WHERE
+                        fav.user_id =?
+                )
+            ORDER BY created_at DESC`,
             [
                 user_id,
                 user_id,

@@ -1,28 +1,14 @@
 {% extends "../layouts/app.twig" %}
 
-{% block title %}Défis{% endblock %}
-
-{% block nav_dropdown %}
-    <ul class="right">
-        <li>
-            <a href="#!" class="dropdown-trigger" data-target="nav-dropdown">
-                <i class="material-icons">
-                    filter_list
-                </i>
-            </a>
-        </li>
-    </ul>
-    <ul id="nav-dropdown" class="dropdown-content">
-        <li><a class="filter" href="#!" data-href="?">Récent</a></li>
-        <li><a class="filter" href="#!" data-href="?realized=true">Réalisé</a></li>
-        <li><a class="filter" href="#!" data-href="?popularity=true">Popularité</a></li>
-    </ul>
-{% endblock %}
+{% block title %}Profil - {{ userObj.pseudo }}{% endblock %}
 
 {% block body %}
     {{ parent() }}
 
-    <div class="row">
+    <div id="profile-tab-overall" class="col s12">
+        <h5>{{ userObj.pseudo }}</h5>
+        <div class="divider"></div>
+
         {% for challenge in challenges %}
             <div class="col s12">
                 <div class="card card-challenge">
@@ -55,47 +41,69 @@
                     </div>
                 </div>
             </div>
-
         {% endfor %}
+    </div>
 
-         <div class="fixed-action-btn">
-            <a href="{{ url }}/challenge/create" class="btn-floating btn-large secondary waves-effect waves-light">
-                <i class="large material-icons">add</i>
-            </a>
-        </div>
+    <div id="profile-tab-realized" class="col s12">
+        <h5>Défis réalisé</h5>
+        <div class="divider"></div>
+
+        {% for challenge in realized %}
+            <div class="col s12">
+                <div class="card card-challenge">
+                    {% if challenge.is_realized == 1 %}
+                        <div class="challenge-realized">
+                            <i class="material-icons small green-text" title="Réalisé">beenhere</i>
+                        </div>
+                    {% endif %}
+                    <a href="{{ url }}/challenge/show/{{ challenge.id }}" class="waves-effect">
+                        <div class="card-content">
+                                <div class="valign-wrapper">
+                                    <span class="challenge-pseudo">{{ challenge.user_pseudo }}</span>
+                                    <small class="grey-text right">{{ challenge.created_at }}</small>
+                                </div>
+                                <p>{{ challenge.content }}</p>
+                        </div>
+                    </a>
+                    <div class="card-action valign-wrapper">
+                        <div>
+                            <span class="valign-wrapper">
+                                <i class="material-icons challenge-like {{ challenge.is_liked > 0 ? 'secondary-text' : '' }}" data-id="{{ challenge.id }}">thumb_up</i>
+                                <span class="amount-like">{{ challenge.amount_like }}</span>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="valign-wrapper">
+                                <i class="material-icons secondary-text challenge-fav" data-id="{{ challenge.id }}">{{ challenge.is_fav > 0 ? 'star' : 'star_border' }}</i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block end_html %}
+
+    <div class="fixed-tabs-wrapper">
+        <ul id="profile-tab" class="tabs">
+            <li class="tab col s6"><a class="active" href="#profile-tab-overall"><i class="material-icons prefix">language</i></a></li>
+            <li class="tab col s6"><a href="#profile-tab-realized"><i class="material-icons">check</i></a></li>
+        </ul>
     </div>
 
 {% endblock %}
 
 {% block javascript %}
     {{ parent() }}
-    <script>
 
-        let router = new Router();
-
-        if(router.queyStringStorageKeyExists()){
-            router.getStorageQueryString();
-        }
-
-        router.persistCurrentQueryString();
-
-        let filters = document.querySelectorAll('.filter');
-
-         for(var i = 0; i < filters.length; i++) {
-            filters[i].addEventListener('click', function() {
-
-                let data = this.getAttribute('data-href');
-
-                router.removeStorageQueryString();
-
-                let location = `${router.fullUrl()}${data}`;
-
-                router.redirect({location:location});
-            });
-        }
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            let tab = document.querySelector('#profile-tab');
+            let tabinstance = M.Tabs.init(tab, {});
 
             let likes = document.querySelectorAll('.challenge-like');
 
@@ -135,9 +143,6 @@
                     });
                 });
             }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
 
             let favs = document.querySelectorAll('.challenge-fav');
 
@@ -148,7 +153,7 @@
 
                     let challenge_id = that.getAttribute('data-id');
 
-                     $.ajax({
+                    $.ajax({
                         method: "POST",
                         url: '{{ url }}/favorite/toggle',
                         data: {

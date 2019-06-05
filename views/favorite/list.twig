@@ -6,7 +6,7 @@
     {{ parent() }}
 
     <div class="row">
-        {% for challenge in challenges %}
+        {% for challenge in favorites %}
             <div class="col s12">
                 <div class="card card-challenge">
                     {% if challenge.is_realized == 1 %}
@@ -26,13 +26,13 @@
                     <div class="card-action valign-wrapper">
                         <div>
                             <span class="valign-wrapper">
-                                <i class="material-icons challenge-like {{ challenge.is_liked > 0 ? 'cyan-text' : '' }}" data-id="{{ challenge.id }}">thumb_up</i>
+                                <i class="material-icons challenge-like {{ challenge.is_liked > 0 ? 'secondary-text' : '' }}" data-id="{{ challenge.id }}">thumb_up</i>
                                 <span class="amount-like">{{ challenge.amount_like }}</span>
                             </span>
                         </div>
                         <div>
                             <span class="valign-wrapper">
-                                <i class="material-icons cyan-text challenge-fav" data-id="{{ challenge.id }}">{{ challenge.is_fav > 0 ? 'star' : 'star_border' }}</i>
+                                <i class="material-icons secondary-text challenge-fav" data-id="{{ challenge.id }}">{{ challenge.is_fav > 0 ? 'star' : 'star_border' }}</i>
                             </span>
                         </div>
                     </div>
@@ -45,7 +45,6 @@
 
 {% block javascript %}
     {{ parent() }}
-    <script src="/static/js/Router.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -70,9 +69,9 @@
                     .done(function( result ) {
 
                         if(result.status === 'deleted'){
-                            that.classList.remove('cyan-text');
+                            that.classList.remove('secondary-text');
                         }else if(result.status === 'inserted'){
-                            that.classList.add('cyan-text');
+                            that.classList.add('secondary-text');
                         }
 
                         amount.innerHTML = result.quantity;

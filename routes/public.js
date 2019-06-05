@@ -9,7 +9,12 @@ module.exports = (db) => {
     const user = new userdao(db);
 
     router.get('/login', function (req,res) {
-        res.render('auth/login',{url: req.urlHelper});
+
+        req.param.addParams({
+            formError: req.flash('error'),
+        });
+
+        res.render('auth/login',req.param.anonymous(req));
     });
 
     router.post('/login',

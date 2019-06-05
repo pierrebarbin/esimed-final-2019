@@ -1,9 +1,5 @@
 {% extends "../layouts/base.twig" %}
 
-{% block css %}
-    <link rel="stylesheet" href="/static/css/app.css">
-{% endblock %}
-
 {% block user_info %}
     <li>
         <div class="user-view">
@@ -34,6 +30,12 @@
         <a href="{{ url }}/account">
             <i class="material-icons">account_circle</i>
             Mon compte
+        </a>
+    </li>
+    <li>
+        <a href="{{ url }}/config">
+            <i class="material-icons">settings</i>
+            Configuration
         </a>
     </li>
     <li>

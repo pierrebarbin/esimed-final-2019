@@ -7,14 +7,14 @@
 
     <div id="challenge-tab-overall" class="col s12">
 
-        <h5><b>{{challenge.user_pseudo}}</b></h5>
+        <a href="{{ url }}/profile/show/{{ challenge.user_id }}"><h5><b>{{challenge.user_pseudo}}</b></h5></a>
         <div class="divider"></div>
 
         <table>
             <tbody>
                 <tr>
                     <td>
-                        <button class="btn-small waves-effect waves-light challenge-like {{ challenge.is_liked > 0 ? 'cyan' : 'black' }}" data-id="{{ challenge.id }}">
+                        <button class="btn-small waves-effect waves-light challenge-like {{ challenge.is_liked > 0 ? 'secondary' : 'light' }}" data-id="{{ challenge.id }}">
                             <span class="valign-wrapper">
                                 <i class="material-icons  white-text">thumb_up</i>
                                 <span class="amount-like white-text m-l-5">{{ challenge.amount_like }}</span>
@@ -268,7 +268,6 @@
 
 {% block javascript %}
     {{ parent() }}
-    <script src="/static/js/Router.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -305,11 +304,11 @@
                     .done(function( result ) {
 
                         if(result.status === 'deleted'){
-                            that.classList.remove('cyan');
-                            that.classList.add('black');
+                            that.classList.remove('secondary');
+                            that.classList.add('light');
                         }else if(result.status === 'inserted'){
-                            that.classList.remove('black');
-                            that.classList.add('cyan');
+                            that.classList.remove('light');
+                            that.classList.add('secondary');
                         }
 
                         amount.innerHTML = result.quantity;

@@ -9,13 +9,13 @@ module.exports = (db) => {
 
     router.get('/', function (req,res) {
 
-        favorite.findAll(req.user[0])
-        .then((challenges) => {
+        favorite.findAll(req.user[0].id)
+        .then((favorites) => {
 
             req.param.addParams({
-                challenges: req.momentHelper.transform(challenges,'created_at'),
+                favorites: req.momentHelper.transform(favorites,'created_at'),
             });
-            console.log(challenges);
+
             res.render('favorite/list',req.param.connected(req));
 
         },(err) => {console.log(err);});

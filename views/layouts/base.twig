@@ -9,6 +9,7 @@
         <!--Import Google Icon Font-->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="/static/lib/materialize/css/materialize.min.css" rel="stylesheet"></link>
+        <link rel="stylesheet" href="/static/css/app.css">
         {% block css %}{% endblock %}
 
         <title>Cap ou pas cap - {% block title %}{% endblock %}</title>
@@ -39,10 +40,36 @@
         </div>
 
         {% block end_html %}{% endblock %}
+        <script src="/static/js/Router.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="/static/lib/materialize/js/materialize.min.js"></script>
         <script>
+            function setTheme(theme = null){
+
+                    if(theme === null){
+                        return;
+                    }
+
+                    switch (theme) {
+                        case 'red':{
+
+                            document.documentElement.style.setProperty('--main-color', '#4F1B1D');
+                            document.documentElement.style.setProperty('--secondary-color', '#83687B');
+                            document.documentElement.style.setProperty('--dark-color', '#2E1115');
+                            document.documentElement.style.setProperty('--light-color', '#83687B');
+                            document.documentElement.style.setProperty('--third-color', '#ADADAD');
+
+                            break;
+                        }
+                        default:{
+                            return;
+                            break;
+                        }
+                    }
+                }
+
             document.addEventListener('DOMContentLoaded', function() {
+
                 let sidenavs = document.querySelectorAll('.sidenav');
                 let sidenavsInstances = M.Sidenav.init(sidenavs, {});
 
@@ -50,7 +77,18 @@
                 let dropdownsInstances = M.Dropdown.init(dropdowns, {
                     constrainWidth: false,
                 });
-            });
+
+                let router = new Router();
+
+                let theme = null;
+
+                if(router.themeStorageKeyExists()){
+                    theme = router.getStorageTheme();
+                }
+
+                setTheme(theme);
+
+                });
         </script>
         {% block javascript %}{% endblock %}
     </body>

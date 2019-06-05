@@ -30,12 +30,18 @@
                         <input type="password" id="password" class="validate" name="password">
                         <label for="password">Mot de passe</label>
                     </div>
+                    {% if formError.length > 0 %}
+                        <div class="col s12 m-t-10 red-text">Identifiants incorrects</div>
+                    {% endif %}
                 </div>
                  <button class="btn waves-effect waves-light" type="submit">
                     S'authentifier
                     <i class="material-icons right">send</i>
                 </button>
             </form>
+            <div class="col s12 m-t-20 center-align">
+                <a href="{{url}}/register">Inscription</a>
+            </div>
         </div>
     </div>
 {% endblock %}

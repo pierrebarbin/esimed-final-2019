@@ -1,0 +1,44 @@
+{% extends "../layouts/app.twig" %}
+
+{% block title %}Config{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+    <p>
+      <label>
+        <input name="theme" type="radio" data-theme="null" />
+        <span>Classique</span>
+      </label>
+    </p>
+    <p>
+      <label>
+        <input name="theme" type="radio" data-theme="red" />
+        <span>Red</span>
+      </label>
+    </p>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            let router = new Router();
+
+            let choices = document.querySelectorAll('input[name=theme]');
+
+            for(var i = 0; i < choices.length; i++) {
+                choices[i].addEventListener('click', function() {
+
+                    let theme = this.getAttribute('data-theme');
+
+                    router.setStorageTheme(theme);
+
+                    router.redirect();
+                });
+            }
+        });
+    </script>
+{% endblock %}

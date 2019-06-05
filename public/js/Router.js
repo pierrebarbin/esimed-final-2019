@@ -5,6 +5,7 @@ class Router {
 
         this.storageFlashKey = 'router-storage-flash';
         this.storageQueryStringKey = 'router-storage-query-string';
+        this.storageThemeKey = 'router-storage-theme';
     }
 
     /**
@@ -109,7 +110,9 @@ class Router {
 
         if (sessionStorage.getItem(this.storageQueryStringKey)
             && sessionStorage.getItem(this.storageQueryStringKey) !== 'undefined'
-            && sessionStorage.getItem(this.storageQueryStringKey) !== undefined) {
+            && sessionStorage.getItem(this.storageQueryStringKey) !== undefined
+            && sessionStorage.getItem(this.storageQueryStringKey) !== null
+            && sessionStorage.getItem(this.storageQueryStringKey) !== 'null') {
 
             return true;
         }
@@ -166,5 +169,26 @@ class Router {
 
     removeStorageQueryString(){
         sessionStorage.removeItem(this.storageQueryStringKey);
+    }
+
+    setStorageTheme(object){
+        sessionStorage.setItem(this.storageThemeKey,JSON.stringify(object));
+    }
+
+    themeStorageKeyExists(){
+
+        if (sessionStorage.getItem(this.storageQueryStringKey)
+            && sessionStorage.getItem(this.storageQueryStringKey) !== 'undefined'
+            && sessionStorage.getItem(this.storageQueryStringKey) !== undefined) {
+
+            return true;
+        }
+        return false;
+    }
+
+    getStorageTheme(){
+        let compressed = sessionStorage.getItem(this.storageQueryStringKey);
+
+        return JSON.parse(compressed);
     }
 }
