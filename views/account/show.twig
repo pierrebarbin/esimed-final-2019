@@ -46,18 +46,19 @@
                                 </a>
                             </div>
                         {% endif %}
-                        {% if challenge.is_commented == 0 and challenge.is_liked == 0 %}
-                            <form action="{{ url }}/challenge/delete/{{ challenge.id }}" method="post" class="icon-form d-inline-block">
-                                <button type="submit">
-                                    <i class="material-icons red-text">delete</i>
-                                    <span class="badge">SUPPRIMER</span>
-                                </button>
-                            </form>
-                        {% else %}
+                        {% if challenge.nbr_comment == 0  or challenge.is_visible == 0 %}
                             <form action="{{ url }}/challenge/visibility/{{ challenge.is_visible == 1 ? 'hide' : 'show' }}/{{ challenge.id }}" method="post" class="icon-form d-inline-block">
                                 <button type="submit">
                                     <i class="material-icons light-text">{{ challenge.is_visible == 1 ? 'visibility_off' : 'visibility' }}</i>
                                     <span class="badge">{{ challenge.is_visible == 1 ? 'CACHER' : 'AFFICHER' }}</span>
+                                </button>
+                            </form>
+                        {% endif %}
+                        {% if challenge.nbr_comment == 0 and challenge.nbr_like == 0 %}
+                            <form action="{{ url }}/challenge/delete/{{ challenge.id }}" method="post" class="icon-form d-inline-block">
+                                <button type="submit">
+                                    <i class="material-icons red-text">delete</i>
+                                    <span class="badge">SUPPRIMER</span>
                                 </button>
                             </form>
                         {% endif %}

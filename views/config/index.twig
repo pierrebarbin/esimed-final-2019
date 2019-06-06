@@ -5,6 +5,9 @@
 {% block body %}
     {{ parent() }}
 
+    <h5>Choix du thème</h3>
+    <div class="divider"></div>
+
     <p>
       <label>
         <input name="theme" type="radio" data-theme="null" />
@@ -15,6 +18,12 @@
       <label>
         <input name="theme" type="radio" data-theme="red" />
         <span>Red</span>
+      </label>
+    </p>
+    <p>
+      <label>
+        <input name="theme" type="radio" data-theme="dark" />
+        <span>Sombre</span>
       </label>
     </p>
 
@@ -30,6 +39,15 @@
             let choices = document.querySelectorAll('input[name=theme]');
 
             for(var i = 0; i < choices.length; i++) {
+
+                if(choices[i].getAttribute('data-theme') === router.getStorageTheme()){
+                    choices[i].checked = true;
+                }
+
+                if(choices[i].getAttribute('data-theme') === "null" && router.getStorageTheme() === undefined){
+                    choices[i].checked = true;
+                }
+
                 choices[i].addEventListener('click', function() {
 
                     let theme = this.getAttribute('data-theme');

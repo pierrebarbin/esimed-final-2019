@@ -110,9 +110,7 @@ class Router {
 
         if (sessionStorage.getItem(this.storageQueryStringKey)
             && sessionStorage.getItem(this.storageQueryStringKey) !== 'undefined'
-            && sessionStorage.getItem(this.storageQueryStringKey) !== undefined
-            && sessionStorage.getItem(this.storageQueryStringKey) !== null
-            && sessionStorage.getItem(this.storageQueryStringKey) !== 'null') {
+            && sessionStorage.getItem(this.storageQueryStringKey) !== undefined) {
 
             return true;
         }
@@ -177,9 +175,11 @@ class Router {
 
     themeStorageKeyExists(){
 
-        if (sessionStorage.getItem(this.storageQueryStringKey)
-            && sessionStorage.getItem(this.storageQueryStringKey) !== 'undefined'
-            && sessionStorage.getItem(this.storageQueryStringKey) !== undefined) {
+        if (sessionStorage.getItem(this.storageThemeKey)
+            && sessionStorage.getItem(this.storageThemeKey) !== 'undefined'
+            && sessionStorage.getItem(this.storageThemeKey) !== undefined
+            && sessionStorage.getItem(this.storageThemeKey) !== null
+            && sessionStorage.getItem(this.storageThemeKey) !== 'null') {
 
             return true;
         }
@@ -187,7 +187,7 @@ class Router {
     }
 
     getStorageTheme(){
-        let compressed = sessionStorage.getItem(this.storageQueryStringKey);
+        let compressed = sessionStorage.getItem(this.storageThemeKey);
 
         return JSON.parse(compressed);
     }

@@ -5,6 +5,9 @@
 {% block body %}
     {{ parent() }}
 
+    <h5>Mes favoris</h3>
+    <div class="divider"></div>
+
     <div class="row">
         {% for challenge in favorites %}
             <div class="col s12">

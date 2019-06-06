@@ -5,7 +5,7 @@ module.exports = function(req,res,next){
 
     let id = req.body.challenge_id;
 
-    challenge.findById(id)
+    challenge.findById(id,req.user[0].id)
     .then((challengeObj) => {
 
             if(challengeObj){

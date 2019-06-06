@@ -22,7 +22,10 @@
 {% block body %}
     {{ parent() }}
 
-    <div class="row">
+    <h5>Liste des défis</h3>
+    <div class="divider"></div>
+
+    <div class="row m-t-20">
         {% for challenge in challenges %}
             <div class="col s12">
                 <div class="card card-challenge">

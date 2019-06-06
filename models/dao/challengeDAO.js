@@ -8,7 +8,15 @@ module.exports = class ChallengeDAO extends DAO {
         this.model = "challenge";
         this.table = "challenges";
 
-        this.globalWhere = "is_visible = 1";
+        //this.globalWhere = "is_visible = 1";
+        this.globalWhere = `(is_visible = 1
+                                OR c.id IN (SELECT like.challenge_id FROM likes as like WHERE like.user_id =? AND c.id=like.challenge_id)
+                                OR c.id IN (SELECT chall.id FROM challenges as chall WHERE chall.user_id =? AND c.id=chall.id)
+                            )`;
+        this.globalWhereOne = `(is_visible = 1
+                                    OR c.id IN (SELECT like.challenge_id FROM likes as like WHERE like.user_id =? AND like.challenge_id=?)
+                                    OR c.id IN (SELECT chall.id FROM challenges as chall WHERE chall.user_id =? AND chall.id=?)
+                                )`;
     }
 
     insert(challengeObj){
@@ -118,23 +126,36 @@ module.exports = class ChallengeDAO extends DAO {
         });
     }
 
-    findById(id){
+    findById(id,user_id){
 
         return new Promise((resolve, reject) => {
-            this.db.all(`SELECT * FROM ${this.table} WHERE ${this.globalWhere} AND id=? LIMIT 1`,
+            this.db.all(`
+                SELECT
+                *
+                FROM
+                    ${this.table} as c
+                WHERE
+                    ${this.globalWhereOne}
+                    AND
+                    id=?
+                LIMIT 1`,
                 [
+                    user_id,
+                    id,
+                    user_id,
+                    id,
                     id
                 ],
                 function(err,challenge){
                     if (err) {
                         reject(err.message);
-                    }
-
-                    if(challenge.length === 0) {
-                        resolve(undefined);
-                    }
-                    else {
-                        resolve(challenge[0]);
+                    }else{console.log();
+                         if(challenge.length === 0) {
+                            resolve(undefined);
+                        }
+                        else {
+                            resolve(challenge[0]);
+                        }
                     }
                 });
         });
@@ -173,10 +194,14 @@ module.exports = class ChallengeDAO extends DAO {
                 FROM ${this.table} as c
                 LEFT JOIN
                     users as u ON c.user_id = u.id
-                WHERE ${this.globalWhere} AND c.id=? LIMIT 1`,
+                WHERE ${this.globalWhereOne} AND c.id=? LIMIT 1`,
                 [
                     user_id,
                     user_id,
+                    user_id,
+                    id,
+                    user_id,
+                    id,
                     id
                 ],
                 function(err,challenge){
@@ -261,6 +286,22 @@ module.exports = class ChallengeDAO extends DAO {
 
     findByUser(user_id,current_user_id,globalWhere = false){
 
+        let params = [
+            current_user_id,
+            current_user_id,
+            user_id,
+        ];
+
+        if(globalWhere){
+            params = [
+                current_user_id,
+                current_user_id,
+                current_user_id,
+                current_user_id,
+                user_id
+            ]
+        }
+
         return new Promise((resolve, reject) => {
             this.db.all(`SELECT
                 (SELECT
@@ -281,6 +322,20 @@ module.exports = class ChallengeDAO extends DAO {
                         AND
                         com.challenge_id=c.id
                     )as is_commented,
+                    (SELECT
+                        COUNT(*)
+                    FROM
+                        comments com_nbr
+                    WHERE
+                        com_nbr.challenge_id=c.id
+                    )as nbr_comment,
+                    (SELECT
+                        COUNT(*)
+                    FROM
+                        likes as nbr_l
+                    WHERE
+                        nbr_l.challenge_id=c.id
+                    )as nbr_like,
                     c.id,
                     c.content,
                     c.is_realized,
@@ -293,11 +348,7 @@ module.exports = class ChallengeDAO extends DAO {
                 LEFT JOIN
                     users as u ON c.user_id = u.id
                 WHERE ${ globalWhere ? this.globalWhere + ' AND ' : '' } user_id=?`,
-                [
-                    current_user_id,
-                    current_user_id,
-                    user_id
-                ],
+                params,
                 (err, challenges) => {
 
                     if(err){
@@ -353,7 +404,9 @@ module.exports = class ChallengeDAO extends DAO {
                 [
                     current_user_id,
                     current_user_id,
-                    user_id
+                    user_id,
+                    current_user_id,
+                    current_user_id
                 ],
                 (err, challenges) => {
 
@@ -415,6 +468,8 @@ module.exports = class ChallengeDAO extends DAO {
             ${where} AND ${this.globalWhere}
             ${orderby}`,
             [
+                user.id,
+                user.id,
                 user.id,
                 user.id
             ],

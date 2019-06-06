@@ -19,7 +19,7 @@
         <div class="navbar-fixed">
             <nav>
                 <div class="nav-wrapper">
-                    <a href="#" data-target="nav-mobile" class="top-nav sidenav-trigger full hide-on-large-only">
+                    <a href="#" data-target="nav-mobile" class="top-nav sidenav-trigger full">
                         <i class="material-icons">
                             menu
                         </i>
@@ -54,10 +54,26 @@
                         case 'red':{
 
                             document.documentElement.style.setProperty('--main-color', '#4F1B1D');
-                            document.documentElement.style.setProperty('--secondary-color', '#83687B');
+                            document.documentElement.style.setProperty('--secondary-color', '#64495C');
                             document.documentElement.style.setProperty('--dark-color', '#2E1115');
                             document.documentElement.style.setProperty('--light-color', '#83687B');
                             document.documentElement.style.setProperty('--third-color', '#ADADAD');
+                            document.documentElement.style.setProperty('--text-color', '#000000');
+                            document.documentElement.style.setProperty('--bg-color', '#FFFFFF');
+                            document.documentElement.style.setProperty('--bg-secondary-color', '#FFFFFF');
+
+                            break;
+                        }
+                        case 'dark':{
+
+                            document.documentElement.style.setProperty('--main-color', '#272727');
+                            document.documentElement.style.setProperty('--secondary-color', '#BEBEBE');
+                            document.documentElement.style.setProperty('--dark-color', '#5D5C61');
+                            document.documentElement.style.setProperty('--light-color', '#414141');
+                            document.documentElement.style.setProperty('--third-color', '#B1A296');
+                            document.documentElement.style.setProperty('--text-color', '#f2f2f2');
+                            document.documentElement.style.setProperty('--bg-color', '#121212');
+                            document.documentElement.style.setProperty('--bg-secondary-color', '#272727');
 
                             break;
                         }

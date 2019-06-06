@@ -21,6 +21,11 @@
                             </span>
                         </button>
                     </td>
+                    {% if challenge.is_visible == 0 %}
+                        <td>
+                            <i class="material-icons small f-right">visibility_off</i>
+                        </td>
+                    {% endif %}
                     {% if challenge.is_realized == 1 %}
                         <td>
                             <i class="material-icons small green-text f-right">beenhere</i>
@@ -47,6 +52,9 @@
                     <i class="material-icons circle">person</i>
                     <span class="title">{{ comment.user_pseudo }}</span>
                     <small class="grey-text">{{ comment.created_at }}</small>
+                    {% if  comment.is_accepted == 1  %}
+                        <i class="material-icons green-text f-16">verified_user</i>
+                    {% endif %}
                     <p>
                         {{ comment.content }}
                     </p>
@@ -56,7 +64,7 @@
                     <div class="m-t-10">
                     {% if comment.is_proof == 1 %}
                         {% if comment.type_media == 'image' %}
-                            <img class="responsive-img" src="{{ comment.media }}">
+                            <img class="responsive-img materialboxed" src="{{ comment.media }}">
                         {% elseif comment.type_media == 'video' %}
                             <video class="responsive-video" controls>
                                 <source src="{{ comment.media }}" type="video/mp4">
@@ -70,7 +78,7 @@
                         {% if user.id == comment.user_id %}
                             <a href="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}">
                                 <i class="material-icons">edit</i>
-                                Editer
+                                EDITER
                             </a>
                             <li class="divider" tabindex="-1"></li>
                         {% endif %}
@@ -106,6 +114,9 @@
                     <i class="material-icons circle">person</i>
                     <span class="title">{{ comment.user_pseudo }}</span>
                     <small class="grey-text">{{ comment.created_at }}</small>
+                    {% if  comment.is_accepted == 1  %}
+                        <i class="material-icons green-text f-16">verified_user</i>
+                    {% endif %}
                     <p>
                         {{ comment.content }}
                     </p>
@@ -115,7 +126,7 @@
                     <div class="m-t-10">
                     {% if comment.is_proof == 1 %}
                         {% if comment.type_media == 'image' %}
-                            <img class="responsive-img" src="{{ comment.media }}">
+                            <img class="responsive-img materialboxed" src="{{ comment.media }}">
                         {% elseif comment.type_media == 'video' %}
                             <video class="responsive-video" controls>
                                 <source src="{{ comment.media }}" type="video/mp4">
@@ -129,7 +140,7 @@
                         {% if user.id == comment.user_id %}
                             <a href="{{ url }}/challenge/{{ challenge.id }}/comment/edit/{{ comment.id }}">
                                 <i class="material-icons">edit</i>
-                                Editer
+                                EDITER
                             </a>
                             <li class="divider" tabindex="-1"></li>
                         {% endif %}
@@ -163,6 +174,9 @@
                         <i class="material-icons circle">person</i>
                         <span class="title">{{ comment.user_pseudo }}</span>
                         <small class="grey-text">{{ comment.created_at }}</small>
+                        {% if  comment.is_accepted == 1  %}
+                            <i class="material-icons green-text f-16">verified_user</i>
+                        {% endif %}
                         <p>
                             {{ comment.content }}
                         </p>
@@ -170,7 +184,7 @@
                         <div class="m-t-10">
                             {% if comment.is_proof == 1 %}
                                 {% if comment.type_media == 'image' %}
-                                    <img class="responsive-img" src="{{ comment.media }}">
+                                    <img class="responsive-img materialboxed" src="{{ comment.media }}">
                                 {% elseif comment.type_media == 'video' %}
                                     <video class="responsive-video" controls>
                                         <source src="{{ comment.media }}" type="video/mp4">
@@ -276,6 +290,9 @@
 
             let tab = document.querySelector('#challenge-tab');
             let tabinstance = M.Tabs.init(tab, {});
+
+            let materialboxed = document.querySelectorAll('.materialboxed');
+            let materialboxedinstances = M.Materialbox.init(materialboxed, {});
 
             let router = new Router();
 

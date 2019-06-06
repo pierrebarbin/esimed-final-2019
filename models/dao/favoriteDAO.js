@@ -42,7 +42,11 @@ module.exports = class FavoriteDAO extends DAO {
             LEFT JOIN
                 users as u ON c.user_id = u.id
             WHERE
-                is_visible = 1 AND c.id IN (
+            (is_visible = 1
+                OR c.id IN (SELECT like.challenge_id FROM likes as like WHERE like.user_id =? AND c.id=like.challenge_id)
+                OR c.id IN (SELECT chall.id FROM challenges as chall WHERE chall.user_id =? AND c.id=chall.id)
+            )
+             AND c.id IN (
                     SELECT
                         fav.challenge_id
                     FROM
@@ -52,6 +56,8 @@ module.exports = class FavoriteDAO extends DAO {
                 )
             ORDER BY created_at DESC`,
             [
+                user_id,
+                user_id,
                 user_id,
                 user_id,
                 user_id,
