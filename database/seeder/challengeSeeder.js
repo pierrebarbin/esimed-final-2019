@@ -8,10 +8,11 @@ module.exports = class ChallengeSeeder {
         let challenge = new challengedao(db);
 
         let challenges = [
-            ['Faire le poirier avec un katana dans la bouche',0,0,user_id,moment().unix()],
-            ['Déclencer une avalance avec sa langue',0,0,user_id,moment().unix()],
-            ['Dab un crocodile',1,0,user_id,moment().unix()],
-            ['Faire la course avec un tigre',0,0,user_id,moment().unix()],
+            ['L\'entraînement de Saitama',0,0,user_id,moment().unix()],
+            ['Lancer une pétard depuis sa voiture',0,0,user_id,moment().subtract(Math.floor(Math.random() * 6) + 1  , 'd').unix()],
+            ['Sauter en parachute d\'un banc',0,0,user_id,moment().subtract(Math.floor(Math.random() * 6) + 1  , 'm').unix()],
+            ['Coder en en Swift uniquement avec les emojis',0,0,user_id,moment().subtract(Math.floor(Math.random() * 6) + 1  , 'M').unix()],
+            ['Faire la course avec un wallaby',0,0,user_id,moment().subtract(Math.floor(Math.random() * 6) + 1  , 'Y').unix()],
         ];
 
         for(let i = 0; i < challenges.length ;i++){

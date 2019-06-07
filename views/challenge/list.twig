@@ -121,8 +121,10 @@
                     .done(function( result ) {
 
                         if(result.status === 'deleted'){
+                            M.toast({html: 'Défi non aimé' });
                             that.classList.remove('secondary-text');
                         }else if(result.status === 'inserted'){
+                            M.toast({html: 'Défi aimé' });
                             that.classList.add('secondary-text');
                         }
 
@@ -178,6 +180,6 @@
                     });
                 });
             }
-        });
+        })
     </script>
 {% endblock %}

@@ -65,13 +65,15 @@ module.exports = class Database {
 
                     if(seeder){
                         userSeeder.seed((user) => {
-                            challengeSeeder.seed((challenge) => {
-                                if(challenge.id < 4){
-                                     commentSeeder.seed((comment) => {
-
-                                    },db,user.id,challenge.id);
-                                }
-                            },db,user.id);
+                            if(user.pseudo === "Tomo"){
+                                challengeSeeder.seed((challenge) => {
+                                    if(challenge.id < 4){
+                                         commentSeeder.seed((comment) => {
+    
+                                        },db,user.id,challenge.id);
+                                    }
+                                },db,user.id);
+                            }
                         },db);
 
                     }

@@ -316,6 +316,10 @@ input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):
 * ---------------------------------
 */
 
+.tab-wrapper>div:last-child{
+    margin-bottom: 50px;
+}
+
 .card-challenge .challenge-realized{
     position: absolute;
     top:-4px;

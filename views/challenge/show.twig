@@ -5,7 +5,7 @@
 {% block body %}
     {{ parent() }}
 
-    <div id="challenge-tab-overall" class="col s12">
+    <div id="challenge-tab-overall" class="col s12 tab-wrapper">
 
         <a href="{{ url }}/profile/show/{{ challenge.user_id }}"><h5><b>{{challenge.user_pseudo}}</b></h5></a>
         <div class="divider"></div>
@@ -20,6 +20,9 @@
                                 <span class="amount-like white-text m-l-5">{{ challenge.amount_like }}</span>
                             </span>
                         </button>
+                    </td>
+                    <td>
+                        <i class="material-icons secondary-text challenge-fav f-right" data-id="{{ challenge.id }}">{{ challenge.is_fav > 0 ? 'star' : 'star_border' }}</i>
                     </td>
                     {% if challenge.is_visible == 0 %}
                         <td>
@@ -102,7 +105,7 @@
         </ul>
     </div>
 
-    <div id="challenge-tab-comment" class="col s12">
+    <div id="challenge-tab-comment" class="col s12 tab-wrapper">
         <div class="w-100">
             <h5 class="d-inline-block"><b>Commentaires</b></h5>
             <a href="#create" class="waves-effect waves-light right m-t-10 m-r-10 modal-trigger" title="Ajouter un commentaire"><i class="material-icons small">add_comment</i></a>
@@ -165,7 +168,7 @@
     </div>
 
     {% if challenge.user_id == user.id %}
-        <div id="challenge-tab-proof" class="col s12">
+        <div id="challenge-tab-proof" class="col s12 tab-wrapper">
             <h5><b>Preuves</b></h5>
             <div class="divider"></div>
             <ul class="collection m-t-20 z-depth-3 m-b-50">
@@ -323,12 +326,51 @@
                         if(result.status === 'deleted'){
                             that.classList.remove('secondary');
                             that.classList.add('light');
+                            M.toast({html: 'Défi non aimé' });
                         }else if(result.status === 'inserted'){
                             that.classList.remove('light');
                             that.classList.add('secondary');
+                            M.toast({html: 'Défi aimé' });
                         }
 
                         amount.innerHTML = result.quantity;
+                    })
+                    .fail(function( jqXHR, textStatus ) {
+
+                        if(jqXHR === 404){
+                            M.toast({html: 'Ce défi n\'existe pas.' });
+                        }else{
+                            M.toast({html: 'Une erreur est survenue, veuillez réessayer plus tard.' });
+                        }
+                    });
+                });
+            }
+
+             let favs = document.querySelectorAll('.challenge-fav');
+
+            for(var i = 0; i < favs.length; i++) {
+                favs[i].addEventListener('click', function() {
+
+                    let that = this;
+
+                    let challenge_id = that.getAttribute('data-id');
+
+                     $.ajax({
+                        method: "POST",
+                        url: '{{ url }}/favorite/toggle',
+                        data: {
+                            challenge_id: challenge_id,
+                        }
+                    })
+                    .done(function( result ) {
+
+                        if(result.status === 'not_fav'){
+                            that.innerHTML = 'star_border';
+                            M.toast({html: 'Défi supprimé des favoris' });
+                        }else if(result.status === 'fav'){
+                            M.toast({html: 'Défi ajouté aux favoris' });
+                            that.innerHTML = 'star';
+                        }
                     })
                     .fail(function( jqXHR, textStatus ) {
 

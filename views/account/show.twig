@@ -56,7 +56,7 @@
                         {% endif %}
                         {% if challenge.nbr_comment == 0 and challenge.nbr_like == 0 %}
                             <form action="{{ url }}/challenge/delete/{{ challenge.id }}" method="post" class="icon-form d-inline-block">
-                                <button type="submit">
+                                <button type="submit" class="delete">
                                     <i class="material-icons red-text">delete</i>
                                     <span class="badge">SUPPRIMER</span>
                                 </button>
@@ -82,10 +82,38 @@
 
 {% block javascript %}
     {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script>
           document.addEventListener('DOMContentLoaded', function() {
             let collapsible = document.querySelectorAll('.collapsible');
             let collapsibleinstances = M.Collapsible.init(collapsible, {});
+
+            let delete_btns = document.querySelectorAll('.delete');
+
+            delete_btns.forEach((btn) => {
+                let form =  btn.closest('form');
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                })
+
+                btn.addEventListener('click',() => {
+                    Swal.fire({
+                        title: 'Êtes-vous sûr?',
+                        text:`Supprimer le défi ?`,
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, Je suis sûr!',
+                        cancelButtonText: 'Retour!'
+                    }).then((result) => {
+                        if (result.value) {
+                            form.submit();
+                        }
+                    })
+                });
+            });
         });
     </script>
 {% endblock %}
