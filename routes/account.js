@@ -76,7 +76,7 @@ module.exports = (db) => {
                     user.updateData(req.user[0].id,{pseudo: pseudo, email: email})
                     .then(() => {
                         //Add toast
-                        res.redirect(`${req.urlHelper}/account`);
+                        req.redirectHelper.redirectWithToast(req,res,'account','Compte modifié avec succès');
                     },()=>{});
                 }
             });
@@ -122,7 +122,7 @@ module.exports = (db) => {
             user.updatePassword(req.user[0].id,{password: UserClass.hashPassword(password_new)})
             .then(() => {
                 //Add toast
-                res.redirect(`${req.urlHelper}/account`);
+                req.redirectHelper.redirectWithToast(req,res,'account','Mot de passe modifié avec succès');
             },()=>{});
         }
     });
